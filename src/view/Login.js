@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import kakaoLoginIcon from "./kakao_login_medium_wide.png"; // 이미지 파일의 경로에 맞게 수정해주세요
+import kakaoLoginImg from "./kakao_login_img.svg";
+import googleLoginImg from "./google_login_img.svg";
+import naverLoginImg from "./naver_login_img.svg";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -59,10 +61,10 @@ const useStyles = makeStyles((theme) => ({
     // animation: "$pulseGray 10s infinite alternate",
   },
   textField: {
-    backgroundColor: 'white', // TextField 배경색을 흰색으로 설정합니다.
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: '#5BAE70', // 테두리 색상을 #5BAE70으로 설정합니다.
+    backgroundColor: "white", // TextField 배경색을 흰색으로 설정합니다.
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#5BAE70", // 테두리 색상을 #5BAE70으로 설정합니다.
       },
     },
   },
@@ -86,8 +88,8 @@ const useStyles = makeStyles((theme) => ({
     "50%": { width: "150px" },
     "100%": { width: "100px" },
   },
-   // 첫 번째 직사각형의 애니메이션
-   "@keyframes pulseWhite500": {
+  // 첫 번째 직사각형의 애니메이션
+  "@keyframes pulseWhite500": {
     "0%": { width: "100px" },
     "50%": { width: "200px" },
     "100%": { width: "100px" },
@@ -112,7 +114,6 @@ const useStyles = makeStyles((theme) => ({
       margin: "auto", // 화면이 클 때 섹션을 가운데 정렬
     },
   },
-  
 }));
 
 const LoginPage = () => {
@@ -175,7 +176,6 @@ const LoginPage = () => {
                 InputLabelProps={{
                   style: { color: "green" }, // 활성화됐을 때 강조되는 색상을 여기에서 지정합니다.
                 }}
-                
               />
               <TextField
                 variant="outlined"
@@ -223,44 +223,48 @@ const LoginPage = () => {
                   회원가입
                 </Button>
               </div>
-              <Grid
-                container
-                justify="space-between"
-                className={classes.socialButtons}
+              <div
+                align="center"
+                style={{
+                  width: "80%",
+                  textAlign: "center",
+                  borderBottom: "1px solid #E3E3E3",
+                  lineHeight: "0.1em",
+                  margin: "0 auto",
+                  marginTop: "40px",
+                  color: "#E3E3E3",
+                }}
               >
-                <Grid item>
-                  <Button
-                    onClick={() => handleSocialLogin("Kakao")}
-                    style={{
-                      backgroundImage: `url(${kakaoLoginIcon})`,
-                      backgroundSize: "cover",
-
-                      width: "300px", // 버튼의 너비
-                      height: "45px", // 버튼의 높이
-                      backgroundPosition: "center",
-                    }}
-                  ></Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleSocialLogin("Google")}
-                  >
-                    구글로 로그인
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleSocialLogin("Apple")}
-                  >
-                    <AppleIcon className={classes.socialIcon} />
-                    애플로 로그인
-                  </Button>
-                </Grid>
-              </Grid>
+                <span style={{ background: "#fff", padding: "0 10px" }}>
+                  또는
+                </span>
+              </div>
+              <div style={{ textAlign: "center", marginTop: "40px" }}>
+                <Button onClick={() => handleSocialLogin("Kakao")}>
+                  <img
+                    src={kakaoLoginImg}
+                    alt="Kakao Login"
+                    className={classes.socialIcon}
+                    fullWidth
+                  />
+                </Button>
+                <Button onClick={() => handleSocialLogin("Google")}>
+                  <img
+                    src={googleLoginImg}
+                    alt="Google Login"
+                    className={classes.socialIcon}
+                    style={{ width: "auto", height: "auto" }}
+                  />
+                </Button>
+                <Button onClick={() => handleSocialLogin("Naver")}>
+                  <img
+                    src={naverLoginImg}
+                    alt="Naver Login"
+                    className={classes.socialIcon}
+                    style={{ width: "auto", height: "auto" }}
+                  />
+                </Button>
+              </div>
             </div>
           </div>
         </Grid>
@@ -268,56 +272,108 @@ const LoginPage = () => {
         <Grid item xs={12} sm={8} className={classes.rightSection}>
           <h1>ALL-REVIEW-YOUNG</h1>
           <div>
-          <div className={classes.whiteRectangle} style={{ width: "0px" }}>
-  </div>
-  <div className={classes.whiteRectangle} style={{ width: "500px" }}>
-    <div className={classes.blackRectangle} style={{ width: "700px" }}>
-      <div className={classes.grayRectangle} style={{ width: "600px" }}>
-        <div className={classes.mintRectangle} style={{ width: "200px"}}>
-  
-</div>
-      </div>
-    </div>
-  </div>
-  <div className={classes.whiteRectangle} style={{ width: "600px" }}>
-    <div className={classes.blackRectangle} style={{ width: "450px" }}>
-      <div className={classes.mintRectangle} style={{ width: "350px" }}>
-        <div className={classes.grayRectangle} style={{ width: "250px" }}></div>
-      </div>
-    </div>
-  </div>
-  <div className={classes.whiteRectangle} style={{ width: "0px" }}>
-  </div>
-  <div className={classes.whiteRectangle} style={{ width: "800px" }}>
-    <div className={classes.blackRectangle} style={{ width: "550px" }}>
-      <div className={classes.grayRectangle} style={{ width: "450px" }}>
-        <div className={classes.mintRectangle} style={{ width: "350px" }}></div>
-      </div>
-    </div>
-  </div>
-  <div className={classes.whiteRectangle} style={{ width: "700px" }}>
-    <div className={classes.mintRectangle} style={{ width: "500px" }}>
-      <div className={classes.grayRectangle} style={{ width: "400px" }}>
-        <div className={classes.blackRectangle} style={{ width: "300px" }}></div>
-      </div>
-    </div>
-  </div>
-  <div className={classes.whiteRectangle} style={{ width: "0px" }}>
-  </div>
-  <div className={classes.blackRectangle} style={{ width: "700px" }}>
-    <div className={classes.mintRectangle} style={{ width: "500px" }}>
-      <div className={classes.grayRectangle} style={{ width: "400px" }}>
-        <div className={classes.whiteRectangle} style={{ width: "300px" }}></div>
-      </div>
-    </div>
-    <div style={{ position: "absolute", bottom: 0, width: "60%", color:"white" , textAlign: "center", marginBottom: "10px"}}>
-    <Typography variant="body2">@명지대학교 - 캡스톤디자인 2024</Typography>
-  </div>
-  </div>
-
-</div>
-
-</Grid>
+            <div
+              className={classes.whiteRectangle}
+              style={{ width: "0px" }}
+            ></div>
+            <div className={classes.whiteRectangle} style={{ width: "500px" }}>
+              <div
+                className={classes.blackRectangle}
+                style={{ width: "700px" }}
+              >
+                <div
+                  className={classes.grayRectangle}
+                  style={{ width: "600px" }}
+                >
+                  <div
+                    className={classes.mintRectangle}
+                    style={{ width: "200px" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div className={classes.whiteRectangle} style={{ width: "600px" }}>
+              <div
+                className={classes.blackRectangle}
+                style={{ width: "450px" }}
+              >
+                <div
+                  className={classes.mintRectangle}
+                  style={{ width: "350px" }}
+                >
+                  <div
+                    className={classes.grayRectangle}
+                    style={{ width: "250px" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div
+              className={classes.whiteRectangle}
+              style={{ width: "0px" }}
+            ></div>
+            <div className={classes.whiteRectangle} style={{ width: "800px" }}>
+              <div
+                className={classes.blackRectangle}
+                style={{ width: "550px" }}
+              >
+                <div
+                  className={classes.grayRectangle}
+                  style={{ width: "450px" }}
+                >
+                  <div
+                    className={classes.mintRectangle}
+                    style={{ width: "350px" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div className={classes.whiteRectangle} style={{ width: "700px" }}>
+              <div className={classes.mintRectangle} style={{ width: "500px" }}>
+                <div
+                  className={classes.grayRectangle}
+                  style={{ width: "400px" }}
+                >
+                  <div
+                    className={classes.blackRectangle}
+                    style={{ width: "300px" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div
+              className={classes.whiteRectangle}
+              style={{ width: "0px" }}
+            ></div>
+            <div className={classes.blackRectangle} style={{ width: "700px" }}>
+              <div className={classes.mintRectangle} style={{ width: "500px" }}>
+                <div
+                  className={classes.grayRectangle}
+                  style={{ width: "400px" }}
+                >
+                  <div
+                    className={classes.whiteRectangle}
+                    style={{ width: "300px" }}
+                  ></div>
+                </div>
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  width: "60%",
+                  color: "white",
+                  textAlign: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <Typography variant="body2">
+                  @명지대학교 - 캡스톤디자인 2024
+                </Typography>
+              </div>
+            </div>
+          </div>
+        </Grid>
       </Grid>
     </div>
   );
