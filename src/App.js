@@ -1,11 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 
-import Test from "./view/Test";
+import MainView from "./view/MainView";
 
 function App() {
 	return (
 		<Routes>
-			<Route exact path="/" element={<Test />} />
+			<Route exact path="/" element={<MainView />} />
 		</Routes>
 	);
 }
