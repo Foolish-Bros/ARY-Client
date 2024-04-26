@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
-import Test from "./view/Test";
+import MainView from "./view/MainView";
 import Login from "./view/Login";
 import Signup from "./view/Signup";
 function App() {
