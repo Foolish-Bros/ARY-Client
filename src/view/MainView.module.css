@@ -1,39 +1,25 @@
-.MainView {
-	background-color: #FFF;
-}
-
-.appBar {
-	position: fixed;
-	width: calc( 100% - 190px );
+.toolBar {
 	background-color: #5BAE70;
 }
 
-.drawer {
-	width: 240px;
-	background-color: #E3E3E3
-}
 
-.content {
-	margin-top: 64px;
-	padding: 16px;
-	margin-left: 240px;
-}
-
-.chatInput {
+.drawerList {
 	display: flex;
-	align-items: center;
-	margin-top: 20px;
+	flex-direction: column;
+	height: 80%;
+	overflow: auto;
+	background-color: #E3E3E3;
 }
 
-.inputField {
-	margin-right: 8px;
+
+.listItemButton {
+	background-color: #000 !important;
 }
 
-.divider {
-	background-color: #000;
-	height: 1px;
-	margin: 8px 0;
+.listItemButton:hover {
+	background-color: #7B7A78;
 }
+
 
 .listItemTextCenter {
 	text-align: center;
@@ -42,25 +28,55 @@
 }
 
 
-.listItemButton {
-	background-color: #000;
-}
-
-.listItemButton:hover {
-	background-color: #7B7A78;
-}
-
-
 .profile {
 	margin-top: auto;
+	background-color: #E3E3E3;
+}
+
+
+/*.chatArea {
+	padding: 16px;
+    margin-left: 240px;
+    margin-top: 64px;
+}*/
+
+
+.chatInput {
+	margin-top: 370px;
+	padding: 16px;
+	margin-left: 240px;
+	display: flex;
+	align-items: center;
+}
+
+
+.inputField {
+	margin-right: 8px;
+}
+
+
+.siteSelectArea {
+	width: 160px;
 }
 
 
 .sendButton {
-	color: #FFF;
-	background-color: #007F73;
+	color: #FFF !important;
+	background-color: #007F73 !important;
 }
 
 .sendButton:hover {
-	background-color: #00695c;
+	background-color: #00695c !important;
 }
+
+.divider {
+	background-color: #000 !important;
+	height: 1px !important;
+	margin: 8px 0 !important;
+}
+
+.bottomChatInput {
+	position: absolute;
+	bottom: 50px;
+	width: 100%;
+  }
