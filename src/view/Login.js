@@ -5,6 +5,10 @@ import googleLoginImg from "./google_login_img.svg";
 import naverLoginImg from "./naver_login_img.svg";
 import { useNavigate } from "react-router-dom";
 
+import logoImg from "./logo.svg";
+// import logoImg from "./logo_black.svg"
+// import logoImg from "./logo_black2.svg"
+
 import {
   Container,
   TextField,
@@ -270,7 +274,12 @@ const LoginPage = () => {
         </Grid>
         {/* Right Section */}
         <Grid item xs={12} sm={8} className={classes.rightSection}>
-          <h1>ALL-REVIEW-YOUNG</h1>
+          {/* <h1>ALL-REVIEW-YOUNG</h1> */}
+          <img 
+            src={logoImg}
+            style={{ width: "300px", height: "auto" }}
+          />
+
           <div>
             <div
               className={classes.whiteRectangle}
