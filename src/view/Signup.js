@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import axios from "axios";
+
 import {
   TextField,
   Button,
@@ -88,6 +90,20 @@ const SignUpPage = () => {
     console.log("Verification code sent to:", email);
     setIsTimerRunning(true);
     setIsResendVisible(false); // 재전송 버튼을 숨김
+
+    axios
+      .get("http://backend.all-review-young.site/member/emailDuplicated", {
+        email: email,
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.isSuccess) {
+          console.log(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleVerifyCode = () => {
