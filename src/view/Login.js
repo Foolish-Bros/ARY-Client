@@ -219,11 +219,15 @@ const LoginPage = () => {
             }}
           />
 
-          <MultiTypingEffect
-            texts={[
-              "Text 1123456789123456123423456785678kae;jfae;klfjasdlfjsfkdjls;jaks;dfjdskf;afjk",
-            ]}
-          />
+          <div style={{ margin: "50px" }}>
+            <MultiTypingEffect
+              texts={[
+                "Hello. All Review Young is a website that analyzes product reviews from various online shopping malls and provides information through a chatbot.",
+                "Our service offers optimal product recommendations based on reliable review data, helping users make better purchasing decisions. Understand the strengths and weaknesses of products through review analysis and receive personalized consultations tailored to your preferences.",
+                "Developed as a capstone design project, All Review Young combines innovative technology with a user-friendly interface to offer consumers the best shopping experience. Try our service now!",
+              ]}
+            />
+          </div>
         </Grid>
       </Grid>
     </div>

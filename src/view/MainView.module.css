@@ -1,66 +1,69 @@
 .MainView {
-	background-color: #FFF;
+  background-color: #fff;
 }
 
 .appBar {
-	position: fixed;
-	width: calc( 100% - 190px );
-	background-color: #5BAE70;
+  position: fixed;
+  width: calc(100% - 190px);
+  background-color: #5bae70;
 }
 
 .drawer {
-	width: 240px;
-	background-color: #E3E3E3
+  width: 240px;
+  background-color: #e3e3e3;
 }
 
 .content {
-	margin-top: 64px;
-	padding: 16px;
-	margin-left: 240px;
+  margin-top: 64px;
+  padding: 16px;
+  margin-left: 240px;
 }
 
 .chatInput {
-	display: flex;
-	align-items: center;
-	margin-top: 20px;
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .inputField {
-	margin-right: 8px;
+  margin-right: 8px;
 }
 
 .divider {
-	background-color: #000;
-	height: 1px;
-	margin: 8px 0;
+  background-color: #000;
+  height: 1px;
+  margin: 8px 0;
 }
 
 .listItemTextCenter {
-	text-align: center;
-	color: #FFF;
-	margin: 0 1px 0;
+  text-align: center;
+  color: #fff;
+  margin: 0 1px 0;
 }
 
-
 .listItemButton {
-	background-color: #000;
+  background-color: #000;
 }
 
 .listItemButton:hover {
-	background-color: #7B7A78;
+  background-color: #7b7a78;
 }
-
 
 .profile {
-	margin-top: auto;
+  margin-top: auto;
 }
 
-
 .sendButton {
-	color: #FFF;
-	background-color: #007F73;
+  color: #fff;
+  background-color: #007f73;
 }
 
 .sendButton:hover {
-	background-color: #00695c;
+  background-color: #00695c;
+}
+
+.typingEffect {
+  font-size: 32px; /* Adjust this value to your desired text size */
+  font-family: Arial, sans-serif; /* Optionally, set a font family */
+  line-height: 1.6; /* Adjust this value to increase or decrease line spacing */
 }
