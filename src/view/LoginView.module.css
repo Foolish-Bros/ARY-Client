@@ -1,0 +1,54 @@
+.root {
+  margin-left: 0;
+}
+
+.socialButtons {
+  margin-top: 16px; /* Assuming 1 spacing unit is 8px */
+}
+
+.socialIcon {
+  margin-right: 8px; /* Assuming 1 spacing unit is 8px */
+}
+
+.signUpButton {
+  margin-top: 16px; /* Assuming 1 spacing unit is 8px */
+}
+
+.rightSection {
+  background-color: #5bae70;
+  height: 100vh; /* Full height */
+}
+
+@media (max-width: 600px) {
+  .rightSection {
+    display: none; /* Hide on small screens */
+  }
+}
+
+.textField {
+  background-color: white; /* Set background color to white */
+}
+
+.textField .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: #5bae70; /* Set border color to #5BAE70 */
+}
+
+.loginSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh; /* Full height */
+}
+
+@media (max-width: 600px) {
+  .loginSection {
+    width: 100%; /* Full width on small screens */
+  }
+}
+
+@media (min-width: 600px) {
+  .loginSection {
+    max-width: 400px; /* Max width 400px on larger screens */
+    margin: auto; /* Center on larger screens */
+  }
+}

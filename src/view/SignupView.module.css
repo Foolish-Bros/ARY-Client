@@ -1,0 +1,24 @@
+.root {
+  background-color: #5bae70; /* 전체 배경색을 #5BAE70으로 설정합니다 */
+  width: 100%; /* 전체 화면 너비 */
+  height: 100vh; /* 전체 화면 높이 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.paper {
+  padding: 24px; /* Assuming 1 spacing unit is 8px */
+  border-radius: 16px; /* Assuming 1 spacing unit is 8px */
+  max-width: 400px; /* 내용물 최대 너비 */
+  width: 100%; /* 내용물 전체 너비 */
+}
+
+.form {
+  width: 100%; /* 폼의 너비를 내용물 전체 너비로 설정합니다 */
+  margin-top: 8px; /* Assuming 1 spacing unit is 8px */
+}
+
+.submit {
+  margin: 24px 0 16px; /* Assuming 1 spacing unit is 8px */
+}

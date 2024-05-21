@@ -1,38 +1,33 @@
 .toolBar {
-	background-color: #5BAE70;
+  background-color: #5bae70;
 }
-
 
 .drawerList {
-	display: flex;
-	flex-direction: column;
-	height: 80%;
-	overflow: auto;
-	background-color: #E3E3E3;
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  overflow: auto;
+  background-color: #e3e3e3;
 }
 
-
 .listItemButton {
-	background-color: #000 !important;
+  background-color: #000 !important;
 }
 
 .listItemButton:hover {
-	background-color: #7B7A78;
+  background-color: #7b7a78;
 }
-
 
 .listItemTextCenter {
-	text-align: center;
-	color: #FFF;
-	margin: 0 1px 0;
+  text-align: center;
+  color: #fff;
+  margin: 0 1px 0;
 }
-
 
 .profile {
-	margin-top: auto;
-	background-color: #E3E3E3;
+  margin-top: auto;
+  background-color: #e3e3e3;
 }
-
 
 /*.chatArea {
 	padding: 16px;
@@ -40,43 +35,46 @@
     margin-top: 64px;
 }*/
 
-
 .chatInput {
-	margin-top: 370px;
-	padding: 16px;
-	margin-left: 240px;
-	display: flex;
-	align-items: center;
+  margin-top: 370px;
+  padding: 16px;
+  margin-left: 240px;
+  display: flex;
+  align-items: center;
 }
-
 
 .inputField {
-	margin-right: 8px;
+  margin-right: 8px;
 }
-
 
 .siteSelectArea {
-	width: 160px;
+  width: 160px;
 }
 
-
 .sendButton {
-	color: #FFF !important;
-	background-color: #007F73 !important;
+  color: #fff !important;
+  background-color: #007f73 !important;
 }
 
 .sendButton:hover {
-	background-color: #00695c !important;
+  background-color: #00695c !important;
 }
 
 .divider {
-	background-color: #000 !important;
-	height: 1px !important;
-	margin: 8px 0 !important;
+  background-color: #000 !important;
+  height: 1px !important;
+  margin: 8px 0 !important;
 }
 
 .bottomChatInput {
-	position: absolute;
-	bottom: 50px;
-	width: 100%;
-  }
+  position: absolute;
+  bottom: 50px;
+  width: 100%;
+}
+
+.typingEffect {
+  font-size: 32px; /* Adjust this value to your desired text size */
+  font-family: Arial, sans-serif; /* Optionally, set a font family */
+  line-height: 1.6; /* Adjust this value to increase or decrease line spacing */
+  color: white;
+}
