@@ -12,7 +12,7 @@ function App() {
 
   // Check if the current path is login or signup
   const isAuthPage =
-    location.pathname === "/login" || location.pathname === "/Signup";
+    location.pathname === "/login" || location.pathname === "/signup";
 
   return (
     <>
@@ -23,7 +23,7 @@ function App() {
         <Route exact path="/result" element={<Chat />} />
         <Route exact path="/login" element={<Login />} />{" "}
         {/* Route for Login */}
-        <Route exact path="/Signup" element={<Signup />} />{" "}
+        <Route exact path="/signup" element={<Signup />} />{" "}
         {/* Route for Signup */}
       </Routes>
     </>
