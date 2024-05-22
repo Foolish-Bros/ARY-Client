@@ -1,0 +1,31 @@
+.drawerList {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  background-color: #e3e3e3;
+}
+
+.listItemButton {
+  background-color: #000 !important;
+}
+
+.listItemButton:hover {
+  background-color: #7b7a78;
+}
+
+.listItemTextCenter {
+  text-align: center;
+  color: #fff;
+  margin: 0 1px 0;
+}
+
+.profile {
+  margin-top: auto;
+  background-color: #e3e3e3;
+}
+
+.divider {
+  background-color: #000 !important;
+  height: 1px !important;
+  margin: 8px 0 !important;
+}
