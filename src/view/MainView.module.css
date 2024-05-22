@@ -5,7 +5,6 @@
 .drawerList {
   display: flex;
   flex-direction: column;
-  height: 80%;
   overflow: auto;
   background-color: #e3e3e3;
 }
