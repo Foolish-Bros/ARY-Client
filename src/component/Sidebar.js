@@ -12,9 +12,6 @@ import {
 import styles from "../view/MainView.module.css"; // CSS 모듈 임포트
 import { useLocation } from "react-router-dom";
 
-//컴포넌트 임포트
-import ReviewAnalysis from "../component/ReviewAnalysis";
-import ReviewItem from "../component/ReviewItem";
 
 function Sidebar() {
   const location = useLocation();
@@ -24,6 +21,7 @@ function Sidebar() {
 
   const clickHandler = (text) => {
     setSelectedItem(text);
+    window.location.href = "/result";
   };
 
   // 채팅 목록 데이터를 배열로 관리
@@ -31,6 +29,28 @@ function Sidebar() {
     { text: "맨투맨" },
     { text: "운동화" },
     { text: "애견 간식" },
+    { text: "맨투맨" },
+    { text: "운동화" },
+    { text: "애견 간식" },
+    { text: "맨투맨" },
+    { text: "운동화" },
+    { text: "애견 간식" },
+    { text: "맨투맨" },
+    { text: "운동화" },
+    { text: "애견 간식" },
+    { text: "맨투맨" },
+    { text: "운동화" },
+    { text: "애견 간식" },
+    { text: "맨투맨" },
+    { text: "운동화" },
+    { text: "애견 간식" },
+    { text: "맨투맨" },
+    { text: "운동화" },
+    { text: "애견 간식" },
+    { text: "맨투맨" },
+    { text: "운동화" },
+    { text: "애견 간식" },
+    
   ];
 
   return (
