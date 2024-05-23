@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import kakaoLoginImg from "./kakao_login_img.svg";
-import googleLoginImg from "./google_login_img.svg";
-import naverLoginImg from "./naver_login_img.svg";
+import kakaoLoginImg from "../resource/kakao_login_img.svg";
+import googleLoginImg from "../resource/google_login_img.svg";
+import naverLoginImg from "../resource/naver_login_img.svg";
 import { useNavigate } from "react-router-dom";
 
-import logoImg from "./logo.svg";
+import logoImg from "../resource/logo.svg";
 import MultiTypingEffect from "./MultiTypingEffect"; // Import the MultiTypingEffect component
 import styles from "./LoginView.module.css";
 import {

@@ -23,8 +23,6 @@ import {
 import styles from "./MainView.module.css"; // CSS 모듈 임포트
 import { useLocation } from "react-router-dom";
 
-
-
 function MainView() {
   const location = useLocation();
   // 선택된 사이트를 관리하기 위한 state
@@ -54,8 +52,6 @@ function MainView() {
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
-
-
 
   // 디버깅용
   useEffect(() => {
