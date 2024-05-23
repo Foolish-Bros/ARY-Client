@@ -1,5 +1,24 @@
 import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, IconButton, Button, Tooltip } from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { keyframes } from '@mui/material';
+
+// 오른쪽 사이드바 컴포넌트 임포트
+import ReviewAnalysis from "../component/ReviewAnalysis";
+import ReviewItem from "../component/ReviewItem";
+import ReadMoreReview from './ReadMoreReviewBtn';
+
+//채팅 메시지 컴포넌트 임포트
+import ChatMessage from './ChatMessage';
+
+
+const arrowAnimation = keyframes`
+  0% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+`;
+
 
 function Chat() {
   const [messages, setMessages] = useState([
@@ -25,6 +44,16 @@ function Chat() {
     { id: 19, sender: 'bot', text: '내일 오후 2시에 치과 예약 완료했습니다!' },*/
   ]);
 
+  //사이드바 오픈 확인용
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  //오른쪽 사이드바 리뷰 저장용 변수
+  const [reviews, setReviews] = useState([
+    { username: "poma****", date: "19.05.24.", content: "가격대비 좋은 것 같네요." },
+    { username: "luna****", date: "20.03.15.", content: "디자인이 너무 마음에 들어요!" },
+    { username: "sora****", date: "21.07.09.", content: "맨투맨 색상이 사진과 다른 거 같아요.." }
+  ]);
+
   const messageStyle = (sender) => ({
     margin: '8px',
     padding: '16px',
@@ -38,19 +67,59 @@ function Chat() {
     flexDirection: 'column',
   });
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  //리뷰 더 보기
+  const loadMoreReviews = () => {
+    const newReviews = [
+      { username: reviews.length + 1, date: '20.04.17', content: `리뷰 내용 ${reviews.length + 1}` },
+      { username: reviews.length + 2, date: '22.06.02', content: `리뷰 내용 ${reviews.length + 2}` },
+      { username: reviews.length + 3, date: '18.02.22', content: `리뷰 내용 ${reviews.length + 3}` }
+    ];
+
+    setReviews([...reviews, ...newReviews]);
+  };
+
   return (
-    <Box sx={{ padding: '16px', marginLeft: '240px', marginTop: '80px', width: 'calc(100% - 400px)', height: 'calc(100vh - 300px)', overflowY: 'auto',}}>
-      {messages.map((message) => (
-        <Box
-          key={message.id}
-          sx={messageStyle(message.sender)}
-        >
-          <Typography variant="caption" sx={{ fontWeight: 'bold', color: message.sender === 'user' ? '#1976d2' : '#388e3c' }}>
-            {message.sender === 'user' ? '사용자' : 'ARY'}
-          </Typography>
-          <Typography variant="body1" style={{ color: 'black' }}>{message.text}</Typography>
-        </Box>
-      ))}
+    <Box sx={{ display: 'flex' }}>
+      <Box sx={{ padding: '16px', marginLeft: '240px', marginTop: '80px', width: 'calc(100% - 400px)', height: 'calc(100vh - 300px)', overflowY: 'auto' }}>
+        {messages.map((message) => (
+          <ChatMessage key={message.id} message={message} />
+        ))}
+      </Box>
+      <Box sx={{ position: 'relative', mt: '80px', mx: '15px' }}>
+        <Tooltip title={isSidebarOpen ? "결과 분석 닫기" : "결과 분석 열기"} placement="left">
+          <IconButton
+            onClick={toggleSidebar}
+            sx={{
+              position: 'fixed',
+              top: '90px',
+              right: '15px',
+              zIndex: 1300,
+              '&:hover .MuiSvgIcon-root': {
+                animation: `${arrowAnimation} 1s infinite`,
+              },
+            }}
+          >
+            {isSidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </Tooltip>
+        {isSidebarOpen && (
+          <Box sx={{ width: '300px', backgroundColor: '#f4f4f4', height: 'calc(100vh - 100px)', overflowY: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+            <ReviewAnalysis />
+            <Box sx={{ maxHeight: 'calc(100vh - 600px)', overflowY: 'auto' }}>
+              {reviews.map((review) => (
+                <ReviewItem username={review.username} date={review.date} content={review.content} />
+              ))}
+              {/* 리뷰 더보기 버튼 추가 */}
+              <ReadMoreReview onClick={loadMoreReviews} />
+            </Box>
+
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 }
