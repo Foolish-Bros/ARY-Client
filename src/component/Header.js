@@ -4,7 +4,10 @@ import styles from "../view/MainView.module.css";
 
 function Header() {
   return (
-    <AppBar position="fixed" sx={{ width: `calc(100% - 250px)`, ml: "250px" }}>
+    <AppBar
+      position="fixed"
+      sx={{ width: `calc(100%)`, ml: "250px", boxShadow: "none" }}
+    >
       <Toolbar className={styles.toolBar}>
         <Typography variant="h6">ALL REVIEW YOUNG</Typography>
       </Toolbar>

@@ -43,16 +43,6 @@ function MainView() {
   // 사이드바 열림 상태를 관리하는 state
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // 사이드바를 여는 함수
-  const openSidebar = () => {
-    setIsSidebarOpen(true);
-  };
-
-  // 사이드바를 닫는 함수
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
-
   // 디버깅용
   useEffect(() => {
     console.log(selectedSite);
@@ -102,47 +92,6 @@ function MainView() {
           </Button>
         </div>
       </main>
-
-      {/* 사이드바가 열려있으면 사이드바 컴포넌트를 렌더링 */}
-      {isSidebarOpen && (
-        <Drawer
-          variant="temporary"
-          anchor="right"
-          open={isSidebarOpen}
-          onClose={closeSidebar}
-          sx={{
-            "& .MuiDrawer-paper": { width: "300px" },
-          }}
-          ModalProps={{
-            BackdropProps: {
-              invisible: true,
-            },
-          }}
-        >
-          {/* ReviewAnalysis 컴포넌트 호출 
-      <ReviewAnalysis /> */}
-
-          {/* 리뷰 내용 추가 */}
-          {/* ReviewItem 컴포넌트를 사용
-            <ReviewItem username="poma****" date="19.05.24." content="가격대비 좋은 것 같네요." />
-            <ReviewItem username="luna****" date="20.03.15." content="디자인이 너무 마음에 들어요!" />
-    <ReviewItem username="sora****" date="21.07.09." content="맨투맨 색상이 사진과 다른 거 같아요.." /> */}
-          {/* 더보기 버튼 추가 */}
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#007F73",
-                "&:hover": {
-                  backgroundColor: "#00695c",
-                },
-              }}
-            >
-              더보기
-            </Button>
-          </Box>
-        </Drawer>
-      )}
     </div>
   );
 }
