@@ -11,8 +11,11 @@ import ReadMoreReview from './ReadMoreReviewBtn';
 
 //채팅 메시지 컴포넌트 임포트
 import ChatMessage from './ChatMessage';
+//채팅 메시지 입력 컴포넌트 임포트
+import ChatMessageInputBox from './ChatMessageInputBox';
 
 
+//사이드바 오픈 버튼 애니메이션 효과
 const arrowAnimation = keyframes`
   0% { transform: translateX(0); }
   50% { transform: translateX(5px); }
@@ -54,24 +57,12 @@ function Chat() {
     { username: "sora****", date: "21.07.09.", content: "맨투맨 색상이 사진과 다른 거 같아요.." }
   ]);
 
-  const messageStyle = (sender) => ({
-    margin: '8px',
-    padding: '16px',
-    borderRadius: '8px',
-    backgroundColor: 'transparent', // 배경색 제거
-    color: sender === 'user' ? '#1976d2' : '#388e3c', // 사용자 및 봇 텍스트 색상 변경
-    border: `1px solid ${sender === 'user' ? '#90caf9' : '#c5e1a5'}`, // 경계선 추가
-    boxShadow: '0 2px 4px rgba(0,0,0,0.2)', // 그림자 유지
-    textAlign: 'left',
-    display: 'flex',
-    flexDirection: 'column',
-  });
-
+  //사이드바 열림 상태 변경
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  //리뷰 더 보기
+  //리뷰 더 불러오기
   const loadMoreReviews = () => {
     const newReviews = [
       { username: reviews.length + 1, date: '20.04.17', content: `리뷰 내용 ${reviews.length + 1}` },
@@ -82,13 +73,43 @@ function Chat() {
     setReviews([...reviews, ...newReviews]);
   };
 
+
+  // 입력 필드 상태 관리
+  const [inputValue, setInputValue] = useState('');
+
+  // 메시지 추가 함수
+  const addMessage = () => {
+    if (inputValue.trim()) {
+      const newMessage = {
+        id: messages.length + 1,
+        sender: 'user',
+        text: inputValue,
+      };
+
+      setMessages([...messages, newMessage]);
+      setInputValue('');
+    }
+  };
+
+
   return (
     <Box sx={{ display: 'flex' }}>
-      <Box sx={{ padding: '16px', marginLeft: '240px', marginTop: '80px', width: 'calc(100% - 400px)', height: 'calc(100vh - 300px)', overflowY: 'auto' }}>
+    {/* 채팅 메시지 박스와 입력 박스를 포함하는 컨테이너 */}
+    <Box sx={{ display: 'flex', flexDirection: 'column', padding: '16px', marginLeft: '250px', marginTop: '80px', width: 'calc(100% - 400px)' }}>
+      {/* 채팅 메시지 박스 */}
+      <Box sx={{ height: 'calc(100vh - 250px)', overflowY: 'auto' }}>
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
       </Box>
+      {/* 채팅 메시지 입력 박스 */}
+      <ChatMessageInputBox
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        addMessage={addMessage}
+      />
+    </Box>
+      
       <Box sx={{ position: 'relative', mt: '80px', mx: '15px' }}>
         <Tooltip title={isSidebarOpen ? "결과 분석 닫기" : "결과 분석 열기"} placement="left">
           <IconButton
