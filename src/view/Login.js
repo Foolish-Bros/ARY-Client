@@ -7,28 +7,7 @@ import { useNavigate } from "react-router-dom";
 import logoImg from "../resource/logo.svg";
 import MultiTypingEffect from "./MultiTypingEffect"; // Import the MultiTypingEffect component
 import styles from "./LoginView.module.css";
-import {
-  TextField,
-  Button,
-  Typography,
-  Grid,
-  AppBar,
-  Toolbar,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  Avatar,
-  ListItemAvatar,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Box,
-  Rating,
-  LinearProgress,
-} from "@mui/material"; // Updated imports
+import { TextField, Button, Typography, Grid } from "@mui/material"; // Updated imports
 
 const LoginPage = () => {
   const navigate = useNavigate();
