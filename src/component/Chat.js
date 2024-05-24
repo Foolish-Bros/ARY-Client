@@ -103,7 +103,7 @@ function Chat() {
   }
 `;
 
-const fadeOut = keyframes`
+  const fadeOut = keyframes`
   from {
     opacity: 1;
     transform: translateX(0);
@@ -116,22 +116,22 @@ const fadeOut = keyframes`
 
   return (
     <Box sx={{ display: 'flex' }}>
-    {/* 채팅 메시지 박스와 입력 박스를 포함하는 컨테이너 */}
-    <Box sx={{ display: 'flex', flexDirection: 'column', padding: '16px', marginLeft: '250px', marginTop: '80px', width: 'calc(100% - 400px)' }}>
-      {/* 채팅 메시지 박스 */}
-      <Box sx={{ height: 'calc(100vh - 250px)', overflowY: 'auto' }}>
-        {messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
-        ))}
+      {/* 채팅 메시지 박스와 입력 박스를 포함하는 컨테이너 */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', padding: '16px', marginLeft: '250px', marginTop: '80px', width: 'calc(100% - 400px)' }}>
+        {/* 채팅 메시지 박스 */}
+        <Box sx={{ height: 'calc(100vh - 250px)', overflowY: 'auto' }}>
+          {messages.map((message) => (
+            <ChatMessage key={message.id} message={message} />
+          ))}
+        </Box>
+        {/* 채팅 메시지 입력 박스 */}
+        <ChatMessageInputBox
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          addMessage={addMessage}
+        />
       </Box>
-      {/* 채팅 메시지 입력 박스 */}
-      <ChatMessageInputBox
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        addMessage={addMessage}
-      />
-    </Box>
-      
+
       <Box sx={{ position: 'relative', mt: '80px', mx: '15px', borderLeft: isSidebarOpen ? '0.1px solid #e3e3e3' : 'none' }}>
         <Tooltip title={isSidebarOpen ? "결과 분석 닫기" : "결과 분석 열기"} placement="left">
           <IconButton
@@ -155,8 +155,12 @@ const fadeOut = keyframes`
             height: 'calc(100vh - 100px)',
             overflowY: 'hidden',
             animation: `${isSidebarOpen ? fadeIn : fadeOut} 0.5s forwards`
-            }}>
+          }}>
             <ReviewAnalysis />
+            {/* 썸네일 이미지 추가 */}
+            <Box sx={{ textAlign: 'center', mt: 5 }}>
+              <img src="/logo192.png" alt="썸네일 이미지" style={{ width: '100px', height: '100px' }} />
+            </Box>
             <Box sx={{ maxHeight: 'calc(100vh - 600px)', overflowY: 'auto' }}>
               {reviews.map((review) => (
                 <ReviewItem key={review.id} username={review.username} date={review.date} content={review.content} />

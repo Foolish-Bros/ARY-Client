@@ -86,11 +86,10 @@ const ReviewAnalysis = () => {
   return (
     <Box sx={{ padding: 2 }}>
       <ReviewAnalysisTitle />
-      {/*여기에 썸네일 사진 넣으면 될 듯*/}
       <AverageRating rating={averageRating} />
-      <SentimentRatio 
-        positivePercentage={positivePercentage} 
-        negativePercentage={negativePercentage} 
+      <SentimentRatio
+        positivePercentage={positivePercentage}
+        negativePercentage={negativePercentage}
       />
     </Box>
   );
