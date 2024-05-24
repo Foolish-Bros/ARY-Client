@@ -12,7 +12,7 @@ import {
 import styles from "../view/Sidebar.module.css"; // CSS 모듈 임포트
 import { useLocation } from "react-router-dom";
 
-const chatItems = ["맨투맨zzzzzzzzzzzfdfsdfsdfsdfsfd", "운동화", "애견 간식"];
+const chatItems = ["맨투맨", "운동화", "애견 간식"];
 const lastQuestionItems = [
   "사이즈가 넉넉한 편인가요?",
   "배송은 얼마나 걸리나요?",

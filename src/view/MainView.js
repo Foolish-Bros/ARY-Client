@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import {
   TextField,
   Button,
@@ -38,14 +37,22 @@ function MainView() {
 
   return (
     <div>
-      <main style={{ flexGrow: 1, height: "100vh", overflow: "auto" }}>
-        <div
-          className={`${styles.chatInput} ${
-            isSidebarOpen ? styles.bottomChatInput : ""
-          }`}
-        >
-          {/* 조건부 렌더링: 어떤 리스트 항목도 선택되지 않았을 때만 지원 사이트 드롭다운 렌더링 */}
-          {
+      <main className={styles.main}>
+        <div className={styles.chatInputContainer}>
+          {/* Greeting message */}
+          <div className={styles.greetingMessage}>
+            창식님
+            <br />
+            반갑습니다
+          </div>
+
+          {/* Chat input and controls */}
+          <div
+            className={`${styles.chatInput} ${
+              isSidebarOpen ? styles.bottomChatInput : ""
+            }`}
+          >
+            {/* 조건부 렌더링: 어떤 리스트 항목도 선택되지 않았을 때만 지원 사이트 드롭다운 렌더링 */}
             <FormControl variant="outlined" className={styles.siteSelectArea}>
               <InputLabel
                 id="site-select-label"
@@ -67,17 +74,17 @@ function MainView() {
                 ))}
               </Select>
             </FormControl>
-          }
 
-          <TextField
-            label={isSidebarOpen ? "입력하세요" : "검색 또는 URL 입력"}
-            variant="outlined"
-            fullWidth
-            className={styles.inputField}
-          />
-          <Button variant="contained" className={styles.sendButton}>
-            전송
-          </Button>
+            <TextField
+              label={isSidebarOpen ? "입력하세요" : "검색 또는 URL 입력"}
+              variant="outlined"
+              fullWidth
+              className={styles.inputField}
+            />
+            <Button variant="contained" className={styles.sendButton}>
+              전송
+            </Button>
+          </div>
         </div>
       </main>
     </div>
