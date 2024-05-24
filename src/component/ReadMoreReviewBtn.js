@@ -8,6 +8,7 @@ const ReadMoreReview = ({ onClick }) => {
         variant="contained"
         onClick={onClick}
         sx={{
+          fontWeight: 'bold',
           backgroundColor: "#007F73",
           "&:hover": {
             backgroundColor: "#00695c",

@@ -16,7 +16,18 @@ function ChatMessageInputBox({ inputValue, setInputValue, addMessage }) {
           }
         }}
       />
-      <Button variant="contained" color="primary" onClick={addMessage} sx={{ marginLeft: '8px' }}>
+      <Button
+        variant="contained"
+        onClick={addMessage}
+        sx={{
+          marginLeft: '8px',
+          backgroundColor: '#007f73',
+          fontWeight: 'bold',
+          '&:hover': {
+            backgroundColor: '#00695c',
+          },
+        }}
+      >
         전송
       </Button>
     </Box>

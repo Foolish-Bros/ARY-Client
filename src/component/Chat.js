@@ -110,7 +110,7 @@ function Chat() {
       />
     </Box>
       
-      <Box sx={{ position: 'relative', mt: '80px', mx: '15px' }}>
+      <Box sx={{ position: 'relative', mt: '80px', mx: '15px', borderLeft: isSidebarOpen ? '0.1px solid #e3e3e3' : 'none' }}>
         <Tooltip title={isSidebarOpen ? "결과 분석 닫기" : "결과 분석 열기"} placement="left">
           <IconButton
             onClick={toggleSidebar}
@@ -128,7 +128,7 @@ function Chat() {
           </IconButton>
         </Tooltip>
         {isSidebarOpen && (
-          <Box sx={{ width: '300px', backgroundColor: '#f4f4f4', height: 'calc(100vh - 100px)', overflowY: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+          <Box sx={{ width: '300px', height: 'calc(100vh - 100px)', overflowY: 'hidden' }}>
             <ReviewAnalysis />
             <Box sx={{ maxHeight: 'calc(100vh - 600px)', overflowY: 'auto' }}>
               {reviews.map((review) => (
