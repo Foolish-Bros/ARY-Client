@@ -52,10 +52,11 @@ function Chat() {
 
   //오른쪽 사이드바 리뷰 저장용 변수
   const [reviews, setReviews] = useState([
-    { username: "poma****", date: "19.05.24.", content: "가격대비 좋은 것 같네요." },
-    { username: "luna****", date: "20.03.15.", content: "디자인이 너무 마음에 들어요!" },
-    { username: "sora****", date: "21.07.09.", content: "맨투맨 색상이 사진과 다른 거 같아요.." }
+    { id: 1, username: "poma****", date: "19.05.24.", content: "가격대비 좋은 것 같네요." },
+    { id: 2, username: "luna****", date: "20.03.15.", content: "디자인이 너무 마음에 들어요!" },
+    { id: 3, username: "sora****", date: "21.07.09.", content: "맨투맨 색상이 사진과 다른 거 같아요.." }
   ]);
+
 
   //사이드바 열림 상태 변경
   const toggleSidebar = () => {
@@ -65,11 +66,10 @@ function Chat() {
   //리뷰 더 불러오기
   const loadMoreReviews = () => {
     const newReviews = [
-      { username: reviews.length + 1, date: '20.04.17', content: `리뷰 내용 ${reviews.length + 1}` },
-      { username: reviews.length + 2, date: '22.06.02', content: `리뷰 내용 ${reviews.length + 2}` },
-      { username: reviews.length + 3, date: '18.02.22', content: `리뷰 내용 ${reviews.length + 3}` }
+      { id: reviews.length + 1, username: reviews.length + 1, date: '20.04.17', content: `리뷰 내용 ${reviews.length + 1}` },
+      { id: reviews.length + 2, username: reviews.length + 2, date: '22.06.02', content: `리뷰 내용 ${reviews.length + 2}` },
+      { id: reviews.length + 3, username: reviews.length + 3, date: '18.02.22', content: `리뷰 내용 ${reviews.length + 3}` }
     ];
-
     setReviews([...reviews, ...newReviews]);
   };
 
@@ -91,6 +91,28 @@ function Chat() {
     }
   };
 
+
+  const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+`;
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -128,11 +150,16 @@ function Chat() {
           </IconButton>
         </Tooltip>
         {isSidebarOpen && (
-          <Box sx={{ width: '300px', height: 'calc(100vh - 100px)', overflowY: 'hidden' }}>
+          <Box sx={{
+            width: '300px',
+            height: 'calc(100vh - 100px)',
+            overflowY: 'hidden',
+            animation: `${isSidebarOpen ? fadeIn : fadeOut} 0.5s forwards`
+            }}>
             <ReviewAnalysis />
             <Box sx={{ maxHeight: 'calc(100vh - 600px)', overflowY: 'auto' }}>
               {reviews.map((review) => (
-                <ReviewItem username={review.username} date={review.date} content={review.content} />
+                <ReviewItem key={review.id} username={review.username} date={review.date} content={review.content} />
               ))}
               {/* 리뷰 더보기 버튼 추가 */}
               <ReadMoreReview onClick={loadMoreReviews} />
