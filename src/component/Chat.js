@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, IconButton, Button, Tooltip } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { keyframes } from '@mui/material';
+import { keyframes, styled } from '@mui/material';
 
 // 오른쪽 사이드바 컴포넌트 임포트
 import ReviewAnalysis from "../component/ReviewAnalysis";
@@ -22,30 +22,75 @@ const arrowAnimation = keyframes`
   100% { transform: translateX(0); }
 `;
 
+//결과 분석 사이드바 애니메이션
+const fadeIn = keyframes`
+ from {
+   opacity: 0;
+   transform: translateX(20px);
+ }
+ to {
+   opacity: 1;
+   transform: translateX(0);
+ }
+`;
+
+//결과 분석 사이드바 애니메이션
+const fadeOut = keyframes`
+ from {
+   opacity: 1;
+   transform: translateX(0);
+ }
+ to {
+   opacity: 0;
+   transform: translateX(20px);
+ }
+`;
+
+
+// 타이핑 애니메이션 효과 정의
+const typingAnimation = keyframes`
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+`;
+
+// 애니메이션이 적용된 메시지 스타일 컴포넌트
+const AnimatedMessage = styled('div')(({ theme, animate }) => ({
+  ...(animate && {
+    animation: `${typingAnimation} 0.5s ease`
+  })
+}));
 
 function Chat() {
-  const [messages, setMessages] = useState([
-    { id: 1, sender: 'user', text: 'https://www.coupang.com/vp/products/7945128164?itemId=22552512026&vendorItemId=89594440513&sourceType=CATEGORY&categoryId=502895&isAddedCart= 분석해주세요!' },
-    { id: 2, sender: 'bot', text: '리뷰를 분석 중입니다...' },
-    { id: 3, sender: 'bot', text: '분석이 완료되었습니다!' },
-    // 임시 채팅 데이터 15개 추가
-    /*{ id: 4, sender: 'user', text: '오늘 날씨 어때요?' },
-    { id: 5, sender: 'bot', text: '오늘은 맑고 따뜻합니다!' },
-    { id: 6, sender: 'user', text: '저녁 메뉴 추천해줘요' },
-    { id: 7, sender: 'bot', text: '치킨은 어떠세요?' },
-    { id: 8, sender: 'user', text: '좋아요! 어디 치킨이 맛있나요?' },
-    { id: 9, sender: 'bot', text: 'OO치킨이 인기 많아요!' },
-    { id: 10, sender: 'user', text: '주문해줄 수 있어요?' },
-    { id: 11, sender: 'bot', text: '죄송해요, 주문 기능은 지원하지 않아요.' },
-    { id: 12, sender: 'user', text: '음악 추천해주세요.' },
-    { id: 13, sender: 'bot', text: '최신 팝 음악 플레이리스트를 추천드립니다!' },
-    { id: 14, sender: 'user', text: '감사합니다! 또 다른 기능이 있나요?' },
-    { id: 15, sender: 'bot', text: '뉴스 요약, 날씨 예보, 일정 관리 등 다양한 기능을 지원합니다.' },
-    { id: 16, sender: 'user', text: '일정 관리 기능은 어떻게 사용하나요?' },
-    { id: 17, sender: 'bot', text: '일정을 말씀해주시면 제가 추가해드릴게요!' },
-    { id: 18, sender: 'user', text: '내일 오후 2시에 치과 예약해주세요.' },
-    { id: 19, sender: 'bot', text: '내일 오후 2시에 치과 예약 완료했습니다!' },*/
-  ]);
+  const [messages, setMessages] = useState([]);
+
+  // 기존 메시지 로딩
+  useEffect(() => {
+    // API 호출을 통해 메시지를 가져오는 코드를 여기에 작성
+    const initialMessages = [
+      // 애니메이션 적용: false
+      { id: 0, sender: 'user', text: 'https://www.coupang.com/vp/products/7945128164?itemId=22552512026&vendorItemId=89594440513&sourceType=CATEGORY&categoryId=502895&isAddedCart= 분석해주세요!' },
+      { id: 1, sender: 'bot', text: '리뷰를 분석 중입니다... 분석이 완료되었습니다!' },
+      { id: 2, sender: 'user', text: '오늘 날씨 어때요?' },
+      { id: 3, sender: 'bot', text: '오늘은 맑고 따뜻합니다!' },
+      // 임시 채팅 데이터 15개 추가
+      /*
+      { id: 6, sender: 'user', text: '저녁 메뉴 추천해줘요' },
+      { id: 7, sender: 'bot', text: '치킨은 어떠세요?' },
+      { id: 8, sender: 'user', text: '좋아요! 어디 치킨이 맛있나요?' },
+      { id: 9, sender: 'bot', text: 'OO치킨이 인기 많아요!' },
+      { id: 10, sender: 'user', text: '주문해줄 수 있어요?' },
+      { id: 11, sender: 'bot', text: '죄송해요, 주문 기능은 지원하지 않아요.' },
+      { id: 12, sender: 'user', text: '음악 추천해주세요.' },
+      { id: 13, sender: 'bot', text: '최신 팝 음악 플레이리스트를 추천드립니다!' },
+      { id: 14, sender: 'user', text: '감사합니다! 또 다른 기능이 있나요?' },
+      { id: 15, sender: 'bot', text: '뉴스 요약, 날씨 예보, 일정 관리 등 다양한 기능을 지원합니다.' },
+      { id: 16, sender: 'user', text: '일정 관리 기능은 어떻게 사용하나요?' },
+      { id: 17, sender: 'bot', text: '일정을 말씀해주시면 제가 추가해드릴게요!' },
+      { id: 18, sender: 'user', text: '내일 오후 2시에 치과 예약해주세요.' },
+      { id: 19, sender: 'bot', text: '내일 오후 2시에 치과 예약 완료했습니다!' },*/
+    ];
+    setMessages(initialMessages);
+  }, []);
 
   //사이드바 오픈 확인용
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -84,6 +129,7 @@ function Chat() {
         id: messages.length + 1,
         sender: 'user',
         text: inputValue,
+        animate: true,
       };
 
       setMessages([...messages, newMessage]);
@@ -92,36 +138,17 @@ function Chat() {
   };
 
 
-  const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-  const fadeOut = keyframes`
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-`;
-
   return (
     <Box sx={{ display: 'flex' }}>
       {/* 채팅 메시지 박스와 입력 박스를 포함하는 컨테이너 */}
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: '16px', marginLeft: '250px', marginTop: '80px', width: 'calc(100% - 400px)' }}>
         {/* 채팅 메시지 박스 */}
         <Box sx={{ height: 'calc(100vh - 250px)', overflowY: 'auto' }}>
+        {console.log(messages)}
           {messages.map((message) => (
-            <ChatMessage key={message.id} message={message} />
+            <AnimatedMessage key={message.id} animate={message.animate}>
+              <ChatMessage message={message} animate={message.animate}/>
+            </AnimatedMessage>
           ))}
         </Box>
         {/* 채팅 메시지 입력 박스 */}
