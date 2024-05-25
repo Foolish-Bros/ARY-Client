@@ -3,7 +3,7 @@ import { Box, TextField, Button } from '@mui/material';
 
 function ChatMessageInputBox({ inputValue, setInputValue, addMessage }) {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: 2 }}>
       <TextField
         fullWidth
         variant="outlined"

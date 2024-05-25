@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, IconButton, Button, Tooltip } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -137,13 +137,35 @@ function Chat() {
     }
   };
 
+  //스크롤 하단 내용 보여주기용 변수
+  const ReviewScrollRef = useRef(null); //Review 더보기
+  const ChatMessageScrollRef = useRef(null); //채팅 메시지 증가
+
+  useEffect(() => {
+    // reviews가 업데이트될 때마다 스크롤을 하단으로 이동
+    if (ReviewScrollRef.current) {
+      ReviewScrollRef.current.scrollTop = ReviewScrollRef.current.scrollHeight;
+    }
+  }, [reviews]);
+  
+  useEffect(() => {
+    // 채팅 메시지가 업데이트될 때마다 스크롤을 하단으로 이동
+    if (ChatMessageScrollRef.current) {
+      setTimeout(() => {
+        ChatMessageScrollRef.current.scrollTop = ChatMessageScrollRef.current.scrollHeight;
+      }, 80); // setTimeout으로 다음 이벤트 루프까지 기다림
+    }
+  }, [messages]);
+  
 
   return (
     <Box sx={{ display: 'flex' }}>
       {/* 채팅 메시지 박스와 입력 박스를 포함하는 컨테이너 */}
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: '16px', marginLeft: '250px', marginTop: '80px', width: 'calc(100% - 400px)' }}>
         {/* 채팅 메시지 박스 */}
-        <Box sx={{ height: 'calc(100vh - 250px)', overflowY: 'auto' }}>
+        <Box sx={{ height: 'calc(100vh - 250px)', overflowY: 'auto' }}
+        ref={ChatMessageScrollRef}
+        >
         {console.log(messages)}
           {messages.map((message) => (
             <AnimatedMessage key={message.id} animate={message.animate}>
@@ -186,9 +208,11 @@ function Chat() {
             <ReviewAnalysis />
             {/* 썸네일 이미지 추가 */}
             <Box sx={{ textAlign: 'center', mt: 5 }}>
-              <img src="/logo192.png" alt="썸네일 이미지" style={{ width: '100px', height: '100px' }} />
+              <img src="/logo192.png" alt="썸네일 이미지" style={{ width: '150px', height: '150px' }} />
             </Box>
-            <Box sx={{ maxHeight: 'calc(100vh - 600px)', overflowY: 'auto' }}>
+            <Box sx={{ maxHeight: 'calc(100vh - 600px)', overflowY: 'auto' }}
+            ref={ReviewScrollRef} // ref를 Box 컴포넌트에 연결
+            >
               {reviews.map((review) => (
                 <ReviewItem key={review.id} username={review.username} date={review.date} content={review.content} />
               ))}
