@@ -12,11 +12,8 @@ import {
 	Paper,
 } from "@mui/material";
 import styles from "./SignupView.module.css"; // Import the CSS file
-import { useLocation } from "react-router-dom";
 
 const SignUpPage = () => {
-	const location = useLocation();
-
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -80,7 +77,6 @@ const SignUpPage = () => {
 				.then((res) => {
 					if (res.data.success) {
 						alert(res.data.message);
-						console.log(res.data);
 						setIsOnEmail(true);
 						setCorrectVerificationCode(res.data.data);
 					}
@@ -124,7 +120,6 @@ const SignUpPage = () => {
 			console.log(verificationCode);
 
 			if (Number(verificationCode) === Number(correctVerificationCode)) {
-				// TODO 이거 해결해야됨
 				console.log("called");
 				setVerificationResult("success");
 				setIsTimerVisible(false); // 인증이 확인되면 시간 초를 숨김
@@ -138,21 +133,19 @@ const SignUpPage = () => {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
-		if (password !== confirmPassword) {
-			alert("비밀번호가 일치하지 않습니다.");
-			return;
-		}
-
 		axios
 			.post("/member/join", {
 				email: email,
 				password: password,
 				passwordCheck: confirmPassword,
+				name: username,
 			})
 			.then((res) => {
 				if (res.data.success) {
 					alert("회원가입 되었습니다. 로그인 후 이용 바랍니다.");
 					window.location.href = "/login";
+				} else {
+					alert(res.data.message);
 				}
 			})
 			.catch((err) => {
