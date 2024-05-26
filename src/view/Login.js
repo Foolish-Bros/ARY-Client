@@ -10,9 +10,12 @@ import logoImg from "../resource/logo.svg";
 import MultiTypingEffect from "./MultiTypingEffect"; // Import the MultiTypingEffect component
 import styles from "./LoginView.module.css";
 import { TextField, Button, Typography, Grid } from "@mui/material"; // Updated imports
+import { useCookies } from "react-cookie";
 
 const LoginPage = () => {
 	const navigate = useNavigate();
+
+	const [cookie, setCookie, removeCookie] = useCookies([]);
 
 	// const classes = useStyles();
 	const [username, setUsername] = useState("");
@@ -41,6 +44,11 @@ const LoginPage = () => {
 				console.log(res);
 				if (res.data.success) {
 					console.log(res.data.data);
+					setCookie("token", res.data.data, {
+						path: "/",
+						secure: "/",
+						expires: new Date(Date.now() + 3600000),
+					});
 				} else {
 					alert(res.data.message);
 				}
