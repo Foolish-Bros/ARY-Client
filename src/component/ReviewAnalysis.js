@@ -87,9 +87,9 @@ const ReviewAnalysis = () => {
     <Box sx={{ padding: 2 }}>
       <ReviewAnalysisTitle />
       <AverageRating rating={averageRating} />
-      <SentimentRatio 
-        positivePercentage={positivePercentage} 
-        negativePercentage={negativePercentage} 
+      <SentimentRatio
+        positivePercentage={positivePercentage}
+        negativePercentage={negativePercentage}
       />
     </Box>
   );
