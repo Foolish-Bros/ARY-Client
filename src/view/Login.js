@@ -49,6 +49,7 @@ const LoginPage = () => {
 						secure: "/",
 						expires: new Date(Date.now() + 3600000),
 					});
+					window.location.href = "/";
 				} else {
 					alert(res.data.message);
 				}
@@ -60,7 +61,9 @@ const LoginPage = () => {
 
 	const handleSocialLogin = (provider) => {
 		// Handle social login logic based on provider
+		// TODO : 쿠키 테스트 배포 후에 해봐야됌
 		console.log(`${provider} login clicked`);
+		window.location.href = `https://backend.all-review-young.site/oauth2/authorization/${provider}`;
 	};
 
 	const handleSignUp = () => {
@@ -160,7 +163,7 @@ const LoginPage = () => {
 								</span>
 							</div>
 							<div style={{ textAlign: "center", marginTop: "40px" }}>
-								<Button onClick={() => handleSocialLogin("Kakao")}>
+								<Button onClick={() => handleSocialLogin("kakao")}>
 									<img
 										src={kakaoLoginImg}
 										alt="Kakao Login"
@@ -168,7 +171,7 @@ const LoginPage = () => {
 										fullWidth
 									/>
 								</Button>
-								<Button onClick={() => handleSocialLogin("Google")}>
+								<Button onClick={() => handleSocialLogin("google")}>
 									<img
 										src={googleLoginImg}
 										alt="Google Login"
@@ -176,7 +179,7 @@ const LoginPage = () => {
 										style={{ width: "auto", height: "auto" }}
 									/>
 								</Button>
-								<Button onClick={() => handleSocialLogin("Naver")}>
+								<Button onClick={() => handleSocialLogin("naver")}>
 									<img
 										src={naverLoginImg}
 										alt="Naver Login"
