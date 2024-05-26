@@ -1,108 +1,143 @@
+@font-face {
+	font-family: "Jua";
+	src: url("../../public/Jua-Regular.ttf") format("truetype");
+}
+
 .main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-  height: 100vh; /* Ensure the main element takes the full viewport height */
-  overflow: auto;
-  margin-left: 250px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-grow: 1;
+	height: 100vh; /* Ensure the main element takes the full viewport height */
+	overflow: auto;
+	margin-left: 250px;
 }
 
 .toolBar {
-  background-color: #5bae70;
+	background-color: #5bae70;
 }
 
 .drawerList {
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  background-color: #e3e3e3;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+	background-color: #e3e3e3;
 }
 
 .listItemButton {
-  background-color: #000 !important;
+	background-color: #000 !important;
 }
 
 .listItemButton:hover {
-  background-color: #7b7a78;
+	background-color: #7b7a78;
 }
 
 .listItemTextCenter {
-  text-align: center;
-  color: #fff;
-  margin: 0 1px 0;
+	text-align: center;
+	color: #fff;
+	margin: 0 1px 0;
 }
 
 .greetingMessage {
-  font-size: 5rem;
-  margin-bottom: 60px;
+	font-size: 4.5rem;
+	text-align: left;
+	width: 100vh;
+	margin-bottom: 60px;
+	font-weight: 600;
+}
+
+.greetingMessage p {
+	margin: 0px;
+}
+
+.greetingMessage p:nth-child(1) {
+	color: #5bae70;
+}
+
+.greetingMessage p:nth-child(1):hover {
+	color: #5bae70;
 }
 
 .profile {
-  margin-top: auto;
-  background-color: #e3e3e3;
+	margin-top: auto;
+	background-color: #e3e3e3;
 }
 
 .chatInputContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
 }
 
 .chatInput {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-width: 700px;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	width: 100%;
+	min-width: 700px;
 }
 
 .inputField {
-  margin-right: 8px;
-  flex-grow: 1; /* Allow input field to take up remaining space */
+	margin-right: 8px;
+	flex-grow: 1; /* Allow input field to take up remaining space */
 }
 
 .siteSelectArea {
-  width: 200px;
-  margin-right: 10px;
+	width: 200px;
 }
 
 .sendButton {
-  color: #fff !important;
-  background-color: #007f73 !important;
-  box-shadow: none;
+	color: #fff !important;
+	background-color: #007f73 !important;
+	height: 56px;
+	box-shadow: none;
 }
 
 .sendButton:hover {
-  background-color: #00695c !important;
+	background-color: #00695c !important;
+}
+
+.bottomTitle {
+	margin-top: 50px;
+	width: 100vh;
+	text-align: left;
+	margin-bottom: 30px;
 }
 
 .divider {
-  background-color: #000 !important;
-  height: 1px !important;
-  margin: 8px 0 !important;
+	background-color: #000 !important;
+	height: 1px !important;
+	margin: 8px 0 !important;
 }
 
 .bottomChatInput {
-  position: absolute;
-  bottom: 50px;
-  width: 100%;
+	position: absolute;
+	bottom: 50px;
+	width: 100%;
 }
 
 .typingEffect {
-  font-size: 32px; /* Adjust this value to your desired text size */
-  font-family: Arial, sans-serif; /* Optionally, set a font family */
-  line-height: 1.6; /* Adjust this value to increase or decrease line spacing */
-  color: white;
+	font-size: 32px; /* Adjust this value to your desired text size */
+	font-family: Arial, sans-serif; /* Optionally, set a font family */
+	line-height: 1.6; /* Adjust this value to increase or decrease line spacing */
+	color: white;
+}
+
+.recommandContainer {
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+	width: 100vh;
 }
 
 .roundbox {
-  padding: 5px 24px 5px 24px; /* Assuming 1 spacing unit is 8px */
-  margin: 30px 10px 10px 0;
-  border-radius: 20px; /* Assuming 1 spacing unit is 8px */
-  border: 1px solid #7b7a78; /* Adds a 2px solid black border */
+	padding: 5px 24px; /* Assuming 1 spacing unit is 8px */
+	margin: 8px 10px 10px 0;
+	border-radius: 20px; /* Assuming 1 spacing unit is 8px */
+	border: 1px solid #7b7a78; /* Adds a 2px solid black border */
 }
 
 .roundbox:hover {
-  background-color: #e3e3e3 !important;
+	background-color: #e3e3e3 !important;
 }
