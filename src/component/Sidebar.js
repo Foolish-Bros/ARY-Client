@@ -8,12 +8,14 @@ import {
   Avatar,
   ListItemAvatar,
   Box,
+  IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
 import styles from "../view/Sidebar.module.css"; // CSS 모듈 임포트
 import { useLocation } from "react-router-dom";
 
-const chatItems = ["맨투맨", "운동화", "애견 간식"];
-const lastQuestionItems = [
+const initialChatItems = ["맨투맨", "운동화", "애견 간식"];
+const initialLastQuestionItems = [
   "사이즈가 넉넉한 편인가요?",
   "배송은 얼마나 걸리나요?",
   "포함된 알레르기 성분 알려주세요 특히 소고기 포함되는지 알고 싶어요",
@@ -22,6 +24,11 @@ const lastQuestionItems = [
 const Sidebar = () => {
   const location = useLocation();
   const [selectedItem, setSelectedItem] = useState(null);
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [chatItems, setChatItems] = useState(initialChatItems);
+  const [lastQuestionItems, setLastQuestionItems] = useState(
+    initialLastQuestionItems
+  );
 
   const clickHandler = (text) => {
     if (text === "") {
@@ -32,67 +39,98 @@ const Sidebar = () => {
     }
   };
 
+  const deleteHandler = (index) => {
+    setChatItems((prevItems) => prevItems.filter((_, i) => i !== index));
+    setLastQuestionItems((prevItems) =>
+      prevItems.filter((_, i) => i !== index)
+    );
+  };
+
   const renderChatItems = () =>
     chatItems.map((text, index) => (
-      <div key={index}>
+      <div
+        key={index}
+        onMouseEnter={() => setHoveredItem(index)}
+        onMouseLeave={() => setHoveredItem(null)}
+      >
         <ListItem
           button
           onClick={() => clickHandler(text)}
           selected={selectedItem === text}
+          className={styles.listItem}
           sx={{
-            width: "95%",
+            width: "225px",
             marginLeft: "5px",
             "&:hover": {
-              backgroundColor: "lightgray", // 회색 배경색 적용
+              backgroundColor: "lightgray",
               borderRadius: "5px",
             },
           }}
         >
           <ListItemText
             primary={
-              <>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
                 <div
                   style={{
-                    width: "100%",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    flex: 1, // Allow this to take up remaining space
+                  }}
+                >
+                  {text}
+                </div>
+                {hoveredItem === index && (
+                  <IconButton
+                    className={styles.deleteButton}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent the item click handler from triggering
+                      deleteHandler(index);
+                    }}
+                    size="small"
+                  >
+                    <CloseIcon
+                      sx={{ fontSize: "20px" }} // Set custom font size
+                    />
+                  </IconButton>
+                )}
+              </Box>
+            }
+            secondary={
+              lastQuestionItems[index] &&
+              lastQuestionItems[index].length > 20 ? (
+                <Box
+                  component="span"
+                  sx={{
+                    color: "gray",
+                    fontSize: "12px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {text}
-                </div>
-                {lastQuestionItems[index] &&
-                lastQuestionItems[index].length > 20 ? (
-                  <Box
-                    component="span"
-                    sx={{
-                      marginLeft: "16px",
-                      marginRight: "16px", // marginRight 추가
-                      color: "gray",
-                      fontSize: "12px",
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {lastQuestionItems[index].slice(0, 20) + "..."}
-                  </Box>
-                ) : (
-                  <Box
-                    component="span"
-                    sx={{
-                      marginLeft: "16px",
-                      color: "gray",
-                      fontSize: "12px",
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {lastQuestionItems[index]}
-                  </Box>
-                )}
-              </>
+                  {lastQuestionItems[index].slice(0, 20) + "..."}
+                </Box>
+              ) : (
+                <Box
+                  component="span"
+                  sx={{
+                    color: "gray",
+                    fontSize: "12px",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {lastQuestionItems[index]}
+                </Box>
+              )
             }
           />
         </ListItem>
@@ -128,13 +166,12 @@ const Sidebar = () => {
           onClick={() => clickHandler("")}
           sx={{
             display: "flex",
-            justifyContent: "space-between", // Align items horizontally
-            alignItems: "center", // Align items vertically
+            justifyContent: "space-between",
+            alignItems: "center",
             backgroundColor: "#007F73",
             borderRadius: "20px",
             width: "190px",
-
-            height: "45px", // 고정된 높이 설정
+            height: "45px",
             mx: "auto",
             mt: 1,
             "&:hover": {
@@ -151,7 +188,6 @@ const Sidebar = () => {
             className={styles.listItemTextCenter}
           />
         </ListItem>
-        {/* <Divider className={styles.divider} /> */}
         <Box
           sx={{
             marginLeft: "16px",
@@ -166,7 +202,7 @@ const Sidebar = () => {
           sx={{
             height: "75%",
             display: "flex",
-            justifyContent: "center", // 아이템들을 수직 가운데로 정렬
+            justifyContent: "center",
           }}
         >
           <List className={styles.drawerList}>{renderChatItems()}</List>
