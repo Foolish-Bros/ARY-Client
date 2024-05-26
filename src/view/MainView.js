@@ -14,7 +14,7 @@ import axios from "../axios";
 import { useCookies } from "react-cookie";
 
 function MainView() {
-	const cookies = useCookies();
+	const cookies = useCookies(["token"]);
 	const navigate = useNavigate(); // Initialize useNavigate
 
 	const [username, setUsername] = useState("");
@@ -30,22 +30,26 @@ function MainView() {
 	];
 
 	useEffect(() => {
-		const memberInfo = async () => {
-			try {
-				const response = await axios.get("/member/info", {
-					headers: {
-						Authorization: `Bearer ${cookies.token}`,
-					},
-				});
-				setUsername(response.data.name);
-				console.log(response.data);
-			} catch (error) {
-				console.log(error);
-			}
-		};
-
-		memberInfo();
-	}, []);
+		const token = cookies[0].token;
+		axios
+			.get("/member/info", {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then((res) => {
+				if (res.data.success) {
+					setUsername(res.data.name);
+					console.log(res.data);
+				} else {
+					alert("로그인 후 이용하세요");
+					window.location.href = "/login";
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [cookies.token]);
 
 	// 사이트 선택 변경 핸들러
 	const handleSiteChange = (event) => {
