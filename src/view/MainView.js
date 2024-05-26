@@ -10,8 +10,14 @@ import {
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import styles from "./MainView.module.css"; // CSS 모듈 임포트
 
+import axios from "../axios";
+import { useCookies } from "react-cookie";
+
 function MainView() {
+	const cookies = useCookies();
 	const navigate = useNavigate(); // Initialize useNavigate
+
+	const [username, setUsername] = useState("");
 
 	// 선택된 사이트를 관리하기 위한 state
 	const [selectedSite, setSelectedSite] = useState("");
@@ -22,6 +28,24 @@ function MainView() {
 		{ value: "11번가", label: "11번가" },
 		{ value: "옥션", label: "옥션" },
 	];
+
+	useEffect(() => {
+		const memberInfo = async () => {
+			try {
+				const response = await axios.get("/member/info", {
+					headers: {
+						Authorization: `Bearer ${cookies.token}`,
+					},
+				});
+				setUsername(response.data.name);
+				console.log(response.data);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		memberInfo();
+	}, []);
 
 	// 사이트 선택 변경 핸들러
 	const handleSiteChange = (event) => {
