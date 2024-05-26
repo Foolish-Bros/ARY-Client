@@ -5,6 +5,7 @@
   flex-grow: 1;
   height: 100vh; /* Ensure the main element takes the full viewport height */
   overflow: auto;
+  margin-left: 250px;
 }
 
 .toolBar {
@@ -34,7 +35,7 @@
 
 .greetingMessage {
   font-size: 5rem;
-  margin-bottom: 20px; /* Increased margin to separate from the dropdown */
+  margin-bottom: 60px;
 }
 
 .profile {
@@ -58,11 +59,12 @@
 
 .inputField {
   margin-right: 8px;
+  min-width: 500px;
   flex-grow: 1; /* Allow input field to take up remaining space */
 }
 
 .siteSelectArea {
-  width: 160px;
+  width: 200px;
   margin-right: 10px;
 }
 
@@ -93,4 +95,15 @@
   font-family: Arial, sans-serif; /* Optionally, set a font family */
   line-height: 1.6; /* Adjust this value to increase or decrease line spacing */
   color: white;
+}
+
+.roundbox {
+  padding: 5px 24px 5px 24px; /* Assuming 1 spacing unit is 8px */
+  margin: 30px 10px 10px 0;
+  border-radius: 20px; /* Assuming 1 spacing unit is 8px */
+  border: 1px solid #7b7a78; /* Adds a 2px solid black border */
+}
+
+.roundbox:hover {
+  background-color: #e3e3e3 !important;
 }

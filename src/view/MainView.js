@@ -7,11 +7,14 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import styles from "./MainView.module.css"; // CSS 모듈 임포트
 import { useLocation } from "react-router-dom";
 
 function MainView() {
   const location = useLocation();
+  const navigate = useNavigate(); // Initialize useNavigate
+
   // 선택된 사이트를 관리하기 위한 state
   const [selectedSite, setSelectedSite] = useState("");
 
@@ -35,6 +38,11 @@ function MainView() {
     console.log(selectedSite);
   }, [selectedSite]);
 
+  // Handle navigation to result page
+  const handleRoundboxClick = (item) => {
+    navigate(`/result?query=${item}`);
+  };
+
   return (
     <div>
       <main className={styles.main}>
@@ -43,7 +51,7 @@ function MainView() {
           <div className={styles.greetingMessage}>
             창식님
             <br />
-            반갑습니다
+            반갑습니다.
           </div>
 
           {/* Chat input and controls */}
@@ -84,6 +92,42 @@ function MainView() {
             <Button variant="contained" className={styles.sendButton}>
               전송
             </Button>
+          </div>
+          {/* Chat input and controls */}
+          <div>
+            <div style={{ marginTop: "100px" }}>최근 인기 상품</div>
+          </div>
+          <div
+            className={`${styles.chatInput} ${
+              isSidebarOpen ? styles.bottomChatInput : ""
+            }`}
+          >
+            <div
+              className={styles.roundbox}
+              onClick={() => handleRoundboxClick("맨투맨")}
+            >
+              맨투맨
+            </div>
+
+            <div
+              className={styles.roundbox}
+              onClick={() => handleRoundboxClick("운동화")}
+            >
+              운동화
+            </div>
+
+            <div
+              className={styles.roundbox}
+              onClick={() => handleRoundboxClick("애견 간식")}
+            >
+              애견 간식
+            </div>
+            <div
+              className={styles.roundbox}
+              onClick={() => handleRoundboxClick("애견 간식")}
+            >
+              애견 간식
+            </div>
           </div>
         </div>
       </main>
