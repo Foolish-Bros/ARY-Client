@@ -126,7 +126,7 @@ function MainView() {
 						</FormControl>
 
 						<TextField
-							label="검색 또는 URL 입력"
+							label="URL 입력"
 							variant="outlined"
 							fullWidth
 							onChange={handleUrlChange}

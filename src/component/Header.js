@@ -44,7 +44,7 @@ function Header() {
 							onClick={() => {
 								// TODO: 링크 수정
 								window.open(
-									"https://lttworld.notion.site/API-Document-188487d905d24695a7c151ca89003446?pvs=74",
+									"/question",
 									"window_name",
 									"width=430, height=500, location=no, status=no, scrollbars=yes"
 								);
