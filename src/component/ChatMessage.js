@@ -21,24 +21,26 @@ const ChatMessage = ({ message, animate }) => {
   const [index, setIndex] = useState(0); // index를 상태로 관리
 
   useEffect(() => {
-    if (animate) {
+    // 애니메이션 조건 추가: animate가 true이고 sender가 ARY일 때
+    if (animate && message.sender === 'ARY') {
       setDisplayText(''); // 애니메이션 시작 시 displayText 초기화
       setIndex(0); // index 초기화
     } else {
-      // animate가 false일 경우, 전체 메시지를 바로 표시
+      // animate가 false이거나 sender가 ARY가 아닐 경우, 전체 메시지를 바로 표시
       setDisplayText(message.text);
     }
-  }, [message.text]); // message.text가 변경될 때만 이 로직을 실행
+  }, [animate, message.sender, message.text]);
 
   useEffect(() => {
-    if (animate && index < message.text.length) {
+    // 애니메이션 조건 추가: animate가 true이고 sender가 ARY일 때, index 검사
+    if (animate && message.sender === 'ARY' && index < message.text.length) {
       const timer = setTimeout(() => {
         setDisplayText((prev) => prev + message.text.charAt(index));
         setIndex(index + 1);
-      }, 75); // 75ms는 타이핑 속도
+      }, 5); // 5ms는 타이핑 속도
       return () => clearTimeout(timer);
     }
-  }, [animate, index, message.text]); // animate, index, message.text가 변경될 때마다 이 로직을 실행
+  }, [animate, index, message.sender, message.text]);
 
   return (
     <Box sx={messageStyle(message.sender)}>

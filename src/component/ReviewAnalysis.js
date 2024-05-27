@@ -9,7 +9,9 @@ const ReviewAnalysisTitle = () => (
     textAlign="center"
     sx={{ fontWeight: "bold" }}
   >
-    맨투맨 리뷰 분석
+    맨투맨
+    <br/>
+    리뷰 분석
   </Typography>
 );
 
@@ -24,7 +26,7 @@ const AverageRating = ({ rating }) => (
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        mt: 2,
+        mt: 1,
       }}
     >
       <Typography variant="body2" sx={{ mr: 2 }}>

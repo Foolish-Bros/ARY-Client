@@ -39,8 +39,8 @@ function MainView() {
 			})
 			.then((res) => {
 				if (res.data.success) {
-					setUsername(res.data.name);
-					console.log(res.data);
+					setUsername(res.data.data.name);
+					console.log(res.data.name);
 				} else {
 					alert("로그인 후 이용하세요");
 					window.location.href = "/login";
@@ -56,11 +56,6 @@ function MainView() {
 		setSelectedSite(event.target.value);
 	};
 
-	// 디버깅용
-	useEffect(() => {
-		console.log(selectedSite);
-	}, [selectedSite]);
-
 	// Handle navigation to result page
 	const handleRoundboxClick = (item) => {
 		navigate(`/result?query=${item}`);
@@ -72,7 +67,7 @@ function MainView() {
 				<div className={styles.chatInputContainer}>
 					{/* Greeting message */}
 					<div className={styles.greetingMessage}>
-						<p>창식님</p>
+						<p>{username}님</p>
 						<p>반갑습니다.</p>
 					</div>
 

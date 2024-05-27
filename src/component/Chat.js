@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Typography, IconButton, Button, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { keyframes, styled } from '@mui/material';
@@ -13,6 +13,8 @@ import ReadMoreReview from './ReadMoreReviewBtn';
 import ChatMessage from './ChatMessage';
 //채팅 메시지 입력 컴포넌트 임포트
 import ChatMessageInputBox from './ChatMessageInputBox';
+
+import axios from '../axios';
 
 
 //사이드바 오픈 버튼 애니메이션 효과
@@ -63,34 +65,63 @@ const AnimatedMessage = styled('div')(({ theme, animate }) => ({
 function Chat() {
   const [messages, setMessages] = useState([]);
 
+
+
   // 기존 메시지 로딩
   useEffect(() => {
     // API 호출을 통해 메시지를 가져오는 코드를 여기에 작성
     const initialMessages = [
       // 애니메이션 적용: false
-      { id: 0, sender: 'user', text: 'https://www.coupang.com/vp/products/7945128164?itemId=22552512026&vendorItemId=89594440513&sourceType=CATEGORY&categoryId=502895&isAddedCart= 분석해주세요!' },
-      { id: 1, sender: 'bot', text: '리뷰를 분석 중입니다... 분석이 완료되었습니다!' },
-      { id: 2, sender: 'user', text: '오늘 날씨 어때요?' },
-      { id: 3, sender: 'bot', text: '오늘은 맑고 따뜻합니다!' },
-      // 임시 채팅 데이터 15개 추가
-      /*
-      { id: 6, sender: 'user', text: '저녁 메뉴 추천해줘요' },
-      { id: 7, sender: 'bot', text: '치킨은 어떠세요?' },
-      { id: 8, sender: 'user', text: '좋아요! 어디 치킨이 맛있나요?' },
-      { id: 9, sender: 'bot', text: 'OO치킨이 인기 많아요!' },
-      { id: 10, sender: 'user', text: '주문해줄 수 있어요?' },
-      { id: 11, sender: 'bot', text: '죄송해요, 주문 기능은 지원하지 않아요.' },
-      { id: 12, sender: 'user', text: '음악 추천해주세요.' },
-      { id: 13, sender: 'bot', text: '최신 팝 음악 플레이리스트를 추천드립니다!' },
-      { id: 14, sender: 'user', text: '감사합니다! 또 다른 기능이 있나요?' },
-      { id: 15, sender: 'bot', text: '뉴스 요약, 날씨 예보, 일정 관리 등 다양한 기능을 지원합니다.' },
-      { id: 16, sender: 'user', text: '일정 관리 기능은 어떻게 사용하나요?' },
-      { id: 17, sender: 'bot', text: '일정을 말씀해주시면 제가 추가해드릴게요!' },
-      { id: 18, sender: 'user', text: '내일 오후 2시에 치과 예약해주세요.' },
-      { id: 19, sender: 'bot', text: '내일 오후 2시에 치과 예약 완료했습니다!' },*/
+      { id: 1, sender: 'user', text: 'https://www.coupang.com/vp/products/7945128164?itemId=22552512026&vendorItemId=89594440513&sourceType=CATEGORY&categoryId=502895&isAddedCart= 분석해주세요!' },
+      { id: 2, sender: 'bot', text: '리뷰를 분석 중입니다... 분석이 완료되었습니다!' },
+      { id: 3, sender: 'user', text: '오늘 날씨 어때요?' },
+      { id: 4, sender: 'bot', text: '오늘은 맑고 따뜻합니다!' },
     ];
     setMessages(initialMessages);
   }, []);
+
+  /*
+  // 기존 메시지 로딩
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const id = "6649b5a5d5004d76b2c6ee40";
+  
+        console.log('Sending request with ID:', id); // 요청 전에 로그 추가
+  
+        const response = await axios.get('/result/load', {
+          params: { id }
+        });
+  
+        console.log('Received response:', response); // 응답 후에 로그 추가
+  
+        if (response.data.success) {
+          const questionList = response.data.data.questionList;
+          const initialMessages = questionList.map((data, index) => [
+            {
+              id: index * 2 + 1,
+              sender: 'user',
+              text: data.question,
+            },
+            {
+              id: index * 2 + 2,
+              sender: 'bot',
+              text: data.answer,
+            },
+          ]).flat();
+  
+          setMessages(initialMessages);
+        } else {
+          console.error('Failed to fetch messages: ', response.data.message);
+        }
+      } catch (error) {
+        console.error('Failed to fetch messages:', error);
+      }
+    };
+  
+    fetchMessages();
+  }, []);
+ */ 
 
   //사이드바 오픈 확인용
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -147,7 +178,7 @@ function Chat() {
       ReviewScrollRef.current.scrollTop = ReviewScrollRef.current.scrollHeight;
     }
   }, [reviews]);
-  
+
   useEffect(() => {
     // 채팅 메시지가 업데이트될 때마다 스크롤을 하단으로 이동
     if (ChatMessageScrollRef.current) {
@@ -156,7 +187,7 @@ function Chat() {
       }, 80); // setTimeout으로 다음 이벤트 루프까지 기다림
     }
   }, [messages]);
-  
+
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -164,12 +195,11 @@ function Chat() {
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: '16px', marginLeft: '250px', marginTop: '80px', width: 'calc(100% - 400px)' }}>
         {/* 채팅 메시지 박스 */}
         <Box sx={{ height: 'calc(100vh - 250px)', overflowY: 'auto' }}
-        ref={ChatMessageScrollRef}
+          ref={ChatMessageScrollRef}
         >
-        {console.log(messages)}
           {messages.map((message) => (
             <AnimatedMessage key={message.id} animate={message.animate}>
-              <ChatMessage message={message} animate={message.animate}/>
+              <ChatMessage message={message} animate={message.animate} />
             </AnimatedMessage>
           ))}
         </Box>
@@ -211,7 +241,7 @@ function Chat() {
               <img src="/logo192.png" alt="썸네일 이미지" style={{ width: '150px', height: '150px' }} />
             </Box>
             <Box sx={{ maxHeight: 'calc(100vh - 600px)', overflowY: 'auto' }}
-            ref={ReviewScrollRef} // ref를 Box 컴포넌트에 연결
+              ref={ReviewScrollRef} // ref를 Box 컴포넌트에 연결
             >
               {reviews.map((review) => (
                 <ReviewItem key={review.id} username={review.username} date={review.date} content={review.content} />
