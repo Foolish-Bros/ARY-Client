@@ -15,18 +15,20 @@ import { useCookies } from "react-cookie";
 
 function MainView() {
 	const cookies = useCookies(["token"]);
+	const [cookieCrawl, setCookieCrawl] = useCookies(["crawl"]);
 	const navigate = useNavigate(); // Initialize useNavigate
 
 	const [username, setUsername] = useState("");
 
 	// 선택된 사이트를 관리하기 위한 state
 	const [selectedSite, setSelectedSite] = useState("");
+	const [url, setUrl] = useState("");
 
 	// 사용 가능한 사이트 목록
 	const sites = [
-		{ value: "coupang", label: "쿠팡" },
-		{ value: "11번가", label: "11번가" },
-		{ value: "옥션", label: "옥션" },
+		{ value: "1", label: "쿠팡" },
+		{ value: "2", label: "11번가" },
+		{ value: "3", label: "옥션" },
 	];
 
 	useEffect(() => {
@@ -40,7 +42,6 @@ function MainView() {
 			.then((res) => {
 				if (res.data.success) {
 					setUsername(res.data.data.name);
-					console.log(res.data.name);
 				} else {
 					alert("로그인 후 이용하세요");
 					window.location.href = "/login";
@@ -49,11 +50,38 @@ function MainView() {
 			.catch((err) => {
 				console.log(err);
 			});
-	}, [cookies.token]);
+	}, []);
 
 	// 사이트 선택 변경 핸들러
 	const handleSiteChange = (event) => {
 		setSelectedSite(event.target.value);
+	};
+
+	// url
+	const handleUrlChange = (event) => {
+		setUrl(event.target.value);
+	};
+
+	// 전송 버튼
+	const onSubmitCrawling = () => {
+		if (sites && url) {
+			setCookieCrawl("crawl", "yes", {
+				path: "/",
+				secure: "/",
+				domain: "localhost",
+				sameSite: "strict",
+				expires: new Date(Date.now() + 3600000),
+			});
+			navigate("/result", {
+				state: {
+					site: selectedSite,
+					url: url,
+				},
+			});
+			window.location.href = "/result";
+		} else {
+			alert("URL을 입력하세요");
+		}
 	};
 
 	// Handle navigation to result page
@@ -101,9 +129,14 @@ function MainView() {
 							label="검색 또는 URL 입력"
 							variant="outlined"
 							fullWidth
+							onChange={handleUrlChange}
 							className={styles.inputField}
 						/>
-						<Button variant="contained" className={styles.sendButton}>
+						<Button
+							variant="contained"
+							onClick={onSubmitCrawling}
+							className={styles.sendButton}
+						>
 							전송
 						</Button>
 					</div>

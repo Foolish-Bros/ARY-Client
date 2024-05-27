@@ -63,7 +63,6 @@ const LoginPage = () => {
 
 	const handleSocialLogin = (provider) => {
 		// Handle social login logic based on provider
-		// TODO : 쿠키 테스트 배포 후에 해봐야됌
 		console.log(`${provider} login clicked`);
 		window.location.href = `https://backend.all-review-young.site/oauth2/authorization/${provider}`;
 	};
