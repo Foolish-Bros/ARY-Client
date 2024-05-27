@@ -1,0 +1,31 @@
+.container {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	padding: 20px;
+}
+
+.title {
+	display: flex;
+	font-size: 30;
+	font-weight: 700;
+	justify-content: center;
+	margin-bottom: 20px;
+}
+
+.input {
+	margin-bottom: 15px;
+	height: calc(100vh - 170px);
+	border: 1px #cccccc solid;
+	border-radius: 5px;
+	padding: 10px;
+	align-items: flex-start;
+	font-size: 15px;
+}
+
+.sendButton {
+	color: #fff !important;
+	background-color: #5bae70 !important;
+	height: 50px;
+	box-shadow: none;
+}
