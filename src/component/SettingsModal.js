@@ -4,6 +4,7 @@ import { Modal, Box, Typography, Tabs, Tab, TextField, Button } from '@mui/mater
 
 import axios from "../axios";
 import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const SettingsModal = ({ open, onClose, tabValue, handleTabChange }) => {
     // 현재 비밀번호, 새 비밀번호, 비밀번호 확인 상태를 관리용
@@ -13,6 +14,9 @@ const SettingsModal = ({ open, onClose, tabValue, handleTabChange }) => {
 
     //쿠키
     const [cookies, setCookie, removeCookie] = useCookies(['token']);
+
+    //navigate
+    const navigate = useNavigate();
 
     // 비밀번호 입력 필드의 스타일을 조정
     const textFieldStyle = {
@@ -30,7 +34,7 @@ const SettingsModal = ({ open, onClose, tabValue, handleTabChange }) => {
     };
 
     // 새 비밀번호와 비밀번호 확인이 같은지 검사용
-    const isMatch = newPassword === confirmPassword && newPassword !== '' && confirmPassword !== '';
+    const isMatch = newPassword === confirmPassword && currentPassword !== '' && newPassword !== '' && confirmPassword !== '';
 
     // 상태를 초기화하고 상위 컴포넌트의 onClose 함수를 호출하는 함수
     const handleClose = () => {
@@ -48,15 +52,15 @@ const SettingsModal = ({ open, onClose, tabValue, handleTabChange }) => {
         const token = cookies.token;
         axios
             .post("/member/changePassword",
-            {                
+                {
                     "oldPassword": currentPassword,
                     "newPassword": newPassword,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
                 },
-            })
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
             .then((res) => {
                 if (res.data.success) {
                     alert(res.data.message);
@@ -70,28 +74,36 @@ const SettingsModal = ({ open, onClose, tabValue, handleTabChange }) => {
             });
     };
 
-    //회원탈퇴
+    //회원 탈퇴
     const handleMemberWithdrawal = () => {
-        //구현해야 함
-        const token = cookies[0].token;
-        console.log(token);
-        /*axios
-            .get("/member/withdrawal", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            .then((res) => {
-                if (res.data.success) {
-                    setUsername(res.data.data.name);
-                } else {
-                    alert("로그인 후 이용하세요");
-                    window.location.href = "/login";
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });*/
+        // confirm 창을 통해 다시 한 번 사용자의 결정 체크
+        const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
+
+        if (isConfirmed) {
+            // 사용자가 '확인'을 누른 경우, 탈퇴 처리 로직을 실행
+            const token = cookies.token;
+            console.log(token);
+            axios
+                .delete("/member/withdrawal", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then((res) => {
+                    if (res.data.success) {
+                        alert(res.data.message);
+                        removeCookie('token');
+                        navigate('/login');
+                    } else {
+                        alert("회원 탈퇴에 실패하였습니다."); //혹시 몰라 넣어둠
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+            // 사용자가 '취소'를 누른 경우, 아무것도 하지 않음
+        }
     };
 
 
@@ -141,7 +153,7 @@ const SettingsModal = ({ open, onClose, tabValue, handleTabChange }) => {
                         }}
                     />
                     <Tab
-                        label="회원탈퇴"
+                        label="회원 탈퇴"
                         sx={{
                             fontWeight: 'bold',
                             color: '#aaa', // 비선택 탭 색상
@@ -203,9 +215,9 @@ const SettingsModal = ({ open, onClose, tabValue, handleTabChange }) => {
                 )}
                 {tabValue === 1 && (
                     <Box mt={2}>
-                        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>회원탈퇴</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>회원 탈퇴</Typography>
                         <Typography variant="body2" color="error" sx={{ fontWeight: 'bold' }}>
-                            회원탈퇴를 진행하면 되돌릴 수 없습니다.
+                            회원 탈퇴를 진행하면 되돌릴 수 없습니다.
                         </Typography>
                         <Button
                             variant="contained"
@@ -219,7 +231,7 @@ const SettingsModal = ({ open, onClose, tabValue, handleTabChange }) => {
                             }}
                             onClick={handleMemberWithdrawal}
                         >
-                            회원탈퇴
+                            회원 탈퇴
                         </Button>
                     </Box>
                 )}
