@@ -5,6 +5,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/ExitToApp'; // 로그아웃 아이콘을 위해 추가
 import PersonIcon from '@mui/icons-material/Person';
 import { grey } from "@mui/material/colors";
+
 import {useCookies} from "react-cookie";
 
 import SettingsModal from "./SettingsModal";
@@ -17,25 +18,26 @@ const Profile = () => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(['token'])
 
-
+    //모달 오픈 상태 처리
     const handleModalOpen = () => {
         setModalOpen(true);
     };
 
+    //모달 닫힐 때 처리
     const handleModalClose = () => {
         setTabValue(0);
         setModalOpen(false);
     };
 
+    //모달 탭 선택 처리
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
 
+    //로그아웃 처리
     const handleLogout = () => {
-        // 로그아웃 로직을 여기에 구현합니다. 예: 세션 클리어, 로그아웃 API 호출 등
         removeCookie('token');
         navigate('/login');
-        console.log("로그아웃 처리");
     };
 
     return (
