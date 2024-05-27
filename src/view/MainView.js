@@ -66,7 +66,7 @@ function MainView() {
 	const onSubmitCrawling = () => {
 		if (sites && url) {
 			setCookieCrawl("crawl", "yes", {
-				path: "/",
+				path: "/result",
 				secure: "/",
 				domain: "localhost",
 				sameSite: "strict",
