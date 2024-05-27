@@ -6,6 +6,7 @@ import Header from "./component/Header";
 import Sidebar from "./component/Sidebar";
 import Login from "./view/Login"; // Import the Login component
 import Signup from "./view/Signup"; // Import the Signin component
+import QnA from "./view/QnA";
 
 function App() {
 	const location = useLocation();
@@ -15,7 +16,8 @@ function App() {
 		location.pathname === "/login" ||
 		location.pathname === "/Login" ||
 		location.pathname === "/signup" ||
-		location.pathname === "/Signup";
+		location.pathname === "/Signup" ||
+		location.pathname === "/question";
 
 	return (
 		<>
@@ -25,6 +27,7 @@ function App() {
 				<Route exact path="/" element={<MainView />} />
 				<Route exact path="/result" element={<Chat />} />
 				<Route exact path="/login" element={<Login />} />{" "}
+				<Route exact path="/question" element={<QnA />} />
 				{/* Route for Login */}
 				<Route exact path="/signup" element={<Signup />} />{" "}
 				{/* Route for Signup */}

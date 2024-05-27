@@ -14,37 +14,42 @@ import axios from "../axios";
 import { useCookies } from "react-cookie";
 
 function MainView() {
-	const cookies = useCookies();
+	const cookies = useCookies(["token"]);
+	const [cookieCrawl, setCookieCrawl] = useCookies(["crawl"]);
 	const navigate = useNavigate(); // Initialize useNavigate
 
 	const [username, setUsername] = useState("");
 
 	// 선택된 사이트를 관리하기 위한 state
 	const [selectedSite, setSelectedSite] = useState("");
+	const [url, setUrl] = useState("");
 
 	// 사용 가능한 사이트 목록
 	const sites = [
-		{ value: "coupang", label: "쿠팡" },
-		{ value: "11번가", label: "11번가" },
-		{ value: "옥션", label: "옥션" },
+		{ value: "1", label: "쿠팡" },
+		{ value: "2", label: "11번가" },
+		{ value: "3", label: "옥션" },
 	];
 
 	useEffect(() => {
-		const memberInfo = async () => {
-			try {
-				const response = await axios.get("/member/info", {
-					headers: {
-						Authorization: `Bearer ${cookies.token}`,
-					},
-				});
-				setUsername(response.data.name);
-				console.log(response.data);
-			} catch (error) {
-				console.log(error);
-			}
-		};
-
-		memberInfo();
+		const token = cookies[0].token;
+		axios
+			.get("/member/info", {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then((res) => {
+				if (res.data.success) {
+					setUsername(res.data.data.name);
+				} else {
+					alert("로그인 후 이용하세요");
+					window.location.href = "/login";
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	}, []);
 
 	// 사이트 선택 변경 핸들러
@@ -52,10 +57,32 @@ function MainView() {
 		setSelectedSite(event.target.value);
 	};
 
-	// 디버깅용
-	useEffect(() => {
-		console.log(selectedSite);
-	}, [selectedSite]);
+	// url
+	const handleUrlChange = (event) => {
+		setUrl(event.target.value);
+	};
+
+	// 전송 버튼
+	const onSubmitCrawling = () => {
+		if (sites && url) {
+			setCookieCrawl("crawl", "yes", {
+				path: "/result",
+				secure: "/",
+				domain: "localhost",
+				sameSite: "strict",
+				expires: new Date(Date.now() + 3600000),
+			});
+			navigate("/result", {
+				state: {
+					site: selectedSite,
+					url: url,
+				},
+			});
+			window.location.href = "/result";
+		} else {
+			alert("URL을 입력하세요");
+		}
+	};
 
 	// Handle navigation to result page
 	const handleRoundboxClick = (item) => {
@@ -68,7 +95,7 @@ function MainView() {
 				<div className={styles.chatInputContainer}>
 					{/* Greeting message */}
 					<div className={styles.greetingMessage}>
-						<p>창식님</p>
+						<p>{username}님</p>
 						<p>반갑습니다.</p>
 					</div>
 
@@ -99,12 +126,17 @@ function MainView() {
 						</FormControl>
 
 						<TextField
-							label="검색 또는 URL 입력"
+							label="URL 입력"
 							variant="outlined"
 							fullWidth
+							onChange={handleUrlChange}
 							className={styles.inputField}
 						/>
-						<Button variant="contained" className={styles.sendButton}>
+						<Button
+							variant="contained"
+							onClick={onSubmitCrawling}
+							className={styles.sendButton}
+						>
 							전송
 						</Button>
 					</div>

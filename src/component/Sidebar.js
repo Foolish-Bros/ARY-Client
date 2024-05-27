@@ -14,6 +14,9 @@ import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
 import styles from "../view/Sidebar.module.css"; // CSS 모듈 임포트
 import { useLocation } from "react-router-dom";
 
+//프로필 컴포넌트 임포트
+import Profile from "./Profile";
+
 const initialChatItems = ["맨투맨", "운동화", "애견 간식"];
 const initialLastQuestionItems = [
 	"사이즈가 넉넉한 편인가요?",
@@ -208,14 +211,7 @@ const Sidebar = () => {
 					<List className={styles.drawerList}>{renderChatItems()}</List>
 				</Box>
 				<Divider className={styles.divider} />
-				<Box>
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>KCS</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="김창식" />
-					</ListItem>
-				</Box>
+				<Profile/>
 			</Box>
 		</Drawer>
 	);

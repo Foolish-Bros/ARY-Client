@@ -15,7 +15,7 @@ import { useCookies } from "react-cookie";
 const LoginPage = () => {
 	const navigate = useNavigate();
 
-	const [cookie, setCookie, removeCookie] = useCookies([]);
+	const [cookies, setCookie] = useCookies(["token"]);
 
 	// const classes = useStyles();
 	const [username, setUsername] = useState("");
@@ -47,6 +47,8 @@ const LoginPage = () => {
 					setCookie("token", res.data.data, {
 						path: "/",
 						secure: "/",
+						domain: "localhost",
+						sameSite: "strict",
 						expires: new Date(Date.now() + 3600000),
 					});
 					window.location.href = "/";
@@ -61,7 +63,6 @@ const LoginPage = () => {
 
 	const handleSocialLogin = (provider) => {
 		// Handle social login logic based on provider
-		// TODO : 쿠키 테스트 배포 후에 해봐야됌
 		console.log(`${provider} login clicked`);
 		window.location.href = `https://backend.all-review-young.site/oauth2/authorization/${provider}`;
 	};
