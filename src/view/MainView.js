@@ -13,11 +13,6 @@ import styles from "./MainView.module.css"; // CSS 모듈 임포트
 import axios from "../axios";
 import { useCookies } from "react-cookie";
 
-// Import logo images
-import coupangLogo from "../resource/coupang_logo_img.svg";
-import elevenstLogo from "../resource/11st_logo_img.svg";
-import auctionLogo from "../resource/auction_logo_img.svg";
-
 function MainView() {
 	const cookies = useCookies(["token"]);
 	const [cookieCrawl, setCookieCrawl] = useCookies(["crawl"]);
@@ -34,13 +29,14 @@ function MainView() {
 
 	// 사용 가능한 사이트 목록
 	const sites = [
-		{ value: "1", label: "쿠팡", logo: coupangLogo },
-		{ value: "2", label: "11번가", logo: elevenstLogo },
-		{ value: "3", label: "옥션", logo: auctionLogo },
+		{ value: "1", label: "쿠팡" },
+		{ value: "2", label: "11번가" },
+		{ value: "3", label: "옥션" },
 	];
 
 	useEffect(() => {
-		if (!cookies[0].token) {
+		const token = cookies[0].token;
+		if (!token) {
 			window.location.replace("/login");
 		}
 		axios
@@ -118,6 +114,7 @@ function MainView() {
 
 					{/* Chat input and controls */}
 					<div className={styles.chatInput}>
+						{/* 조건부 렌더링: 어떤 리스트 항목도 선택되지 않았을 때만 지원 사이트 드롭다운 렌더링 */}
 						<FormControl variant="outlined" className={styles.siteSelectArea}>
 							<InputLabel
 								id="site-select-label"
@@ -131,24 +128,14 @@ function MainView() {
 								value={selectedSite}
 								onChange={handleSiteChange}
 								label="지원 사이트"
-								renderValue={(selected) => {
-									const site = sites.find(s => s.value === selected);
-									return (
-										<div style={{ display: 'flex', alignItems: 'center' }}>
-											<img src={site.logo} alt={site.label} style={{ marginRight: 16, width: 30, height: 30 }} />
-											{site.label}
-										</div>
-									);
-								}}
 							>
 								{sites.map((site) => (
 									<MenuItem key={site.value} value={site.value}>
-										<img src={site.logo} alt={site.label} style={{ marginRight: 16, width: 30, height: 30 }} />
 										{site.label}
+										{/* <img alt="image" src="./logo192.png" /> */}
 									</MenuItem>
 								))}
 							</Select>
-
 						</FormControl>
 
 						<TextField
