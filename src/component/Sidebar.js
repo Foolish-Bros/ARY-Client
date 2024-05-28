@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Drawer,
 	List,
 	ListItem,
 	ListItemText,
 	Divider,
-	Avatar,
-	ListItemAvatar,
 	Box,
 	IconButton,
 } from "@mui/material";
@@ -17,36 +15,93 @@ import { useLocation } from "react-router-dom";
 //프로필 컴포넌트 임포트
 import Profile from "./Profile";
 
-const initialChatItems = ["맨투맨", "운동화", "애견 간식"];
-const initialLastQuestionItems = [
-	"사이즈가 넉넉한 편인가요?",
-	"배송은 얼마나 걸리나요?",
-	"포함된 알레르기 성분 알려주세요 특히 소고기 포함되는지 알고 싶어요",
-];
+import axios from "../axios";
+import { useCookies } from "react-cookie";
 
 const Sidebar = () => {
 	const location = useLocation();
+	const [username, setUsername] = useState("");
 	const [selectedItem, setSelectedItem] = useState(null);
 	const [hoveredItem, setHoveredItem] = useState(null);
-	const [chatItems, setChatItems] = useState(initialChatItems);
-	const [lastQuestionItems, setLastQuestionItems] = useState(
-		initialLastQuestionItems
-	);
+	const [chatItems, setChatItems] = useState([]);
+	const [lastQuestionItems, setlastQuestionItems] = useState([]);
+	const [itemData, setItemData] = useState([]); // id와 reviewId를 저장할 상태
 
-	const clickHandler = (text) => {
-		if (text === "") {
+	//쿠키
+	const [cookies, setCookies, removeCookie] = useCookies(["token"]);
+
+	useEffect(() => {
+		const token = cookies.token;
+		axios
+			.get("/member/results", {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then((res) => {
+				if (res.data.success) {
+					const chatItems = res.data.data.map((item) => item.title || "");
+					const lastQuestionItems = res.data.data.map((item) => {
+						const questions = item.questionList;
+						return questions.length > 0
+							? questions[questions.length - 1].question
+							: "";
+					});
+					const itemData = res.data.data.map((item) => ({
+						id: item.id,
+						reviewId: item.reviewId,
+					}));
+					setChatItems(chatItems);
+					setlastQuestionItems(lastQuestionItems);
+					setItemData(itemData); // id와 reviewId를 저장
+
+					// username 저장
+					if (res.data.data.length > 0 && res.data.data[0].member) {
+						setUsername(res.data.data[0].member.name);
+					}
+				} else {
+					alert("초기 데이터 설정에서 오류가 발생하였습니다.");
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [cookies.token]);
+
+	const clickHandler = (index, text) => {
+		if (text === "new") {
 			window.location.href = "/";
 		} else {
-			setSelectedItem(text);
-			window.location.href = "/result";
+			const resultId = itemData[index].id;
+			if (resultId) {
+				window.location.href = `/result?id=${resultId}`;
+			}
 		}
 	};
 
 	const deleteHandler = (index) => {
-		setChatItems((prevItems) => prevItems.filter((_, i) => i !== index));
-		setLastQuestionItems((prevItems) =>
-			prevItems.filter((_, i) => i !== index)
-		);
+		const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+		if (confirmDelete) {
+			const resultId = itemData[index].id; //리뷰 아이디와 구별을 위해 id를 결과 아이디로 사용
+			axios
+				.delete("/result/delete", { data: { resultId } })
+				.then((res) => {
+					if (res.data.success) {
+						setChatItems((prevItems) =>
+							prevItems.filter((_, i) => i !== index)
+						);
+						setlastQuestionItems((prevItems) =>
+							prevItems.filter((_, i) => i !== index)
+						);
+						setItemData((prevItems) => prevItems.filter((_, i) => i !== index)); // 삭제 시 itemData도 업데이트
+					} else {
+						alert("삭제에 실패하였습니다.");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
 	};
 
 	const renderChatItems = () =>
@@ -58,7 +113,7 @@ const Sidebar = () => {
 			>
 				<ListItem
 					button
-					onClick={() => clickHandler(text)}
+					onClick={() => clickHandler(index, text)}
 					selected={selectedItem === text}
 					className={styles.listItem}
 					sx={{
@@ -166,7 +221,7 @@ const Sidebar = () => {
 			>
 				<ListItem
 					button
-					onClick={() => clickHandler("")}
+					onClick={() => clickHandler(1, "new")}
 					sx={{
 						display: "flex",
 						justifyContent: "space-between",
@@ -211,7 +266,7 @@ const Sidebar = () => {
 					<List className={styles.drawerList}>{renderChatItems()}</List>
 				</Box>
 				<Divider className={styles.divider} />
-				<Profile/>
+				<Profile username={username} />
 			</Box>
 		</Drawer>
 	);

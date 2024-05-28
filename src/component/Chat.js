@@ -15,7 +15,7 @@ import ChatMessage from "./ChatMessage";
 import ChatMessageInputBox from "./ChatMessageInputBox";
 
 import axios from "../axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 //사이드바 오픈 버튼 애니메이션 효과
@@ -64,22 +64,33 @@ const AnimatedMessage = styled("div")(({ theme, animate }) => ({
 
 function Chat() {
 	const location = useLocation();
-	const cookies = useCookies(["token"]);
-	const [cookieCrawl, setCookieCrawl, removeCookieCrawl] = useCookies([
+	const [idParams] = useSearchParams();
+	const [cookies, setCookies, removeCookies] = useCookies([
+		"token",
 		"crawl",
+		"resultId",
+		"reviewId",
 	]);
-	const token = cookies[0].token;
-	const site = location.state.site;
-	const url = location.state.url;
+	const [baseUrl, setBaseUrl] = useState("");
+	const [currentEmail, setCurrentEmail] = useState("");
+	const [resultEmail, setResultEmail] = useState("");
+	const token = cookies.token;
+	let site;
+	let url;
+	if (location.state) {
+		site = location.state.site;
+		url = location.state.url;
+	}
 	const [messages, setMessages] = useState([]);
 
 	//로딩되었는지 확인하는 용도
 	const [isLoaded, setIsLoaded] = useState(false);
-
+	const [moreText, setMoreText] = useState("더보기");
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	// 오른쪽 사이드바 리뷰 관련
-	const [id, setId] = useState("");
+	let reviewId = "";
+	const [forMore, setForMore] = useState("");
 	const [title, setTitle] = useState("");
 	const [totalRate, setTotalRate] = useState("");
 	const [reviews, setReviews] = useState([]);
@@ -87,34 +98,78 @@ function Chat() {
 	const [times, setTimes] = useState(1);
 
 	// 결과 관련
-	const [resultId, setResultId] = useState("");
+	let resultId = "";
 
-	// 기존 메시지 로딩
 	useEffect(() => {
-		console.log(site);
-		console.log(url);
-		// API 호출을 통해 메시지를 가져오는 코드를 여기에 작성
-		const initialMessages = [
-			// 애니메이션 적용: false
-			{
-				id: 1,
-				sender: "user",
-				text: "https://www.coupang.com/vp/products/7945128164?itemId=22552512026&vendorItemId=89594440513&sourceType=CATEGORY&categoryId=502895&isAddedCart= 분석해주세요!",
-			},
-			{
-				id: 2,
-				sender: "bot",
-				text: "리뷰를 분석 중입니다... 분석이 완료되었습니다!",
-			},
-			{ id: 3, sender: "user", text: "오늘 날씨 어때요?" },
-			{ id: 4, sender: "bot", text: "오늘은 맑고 따뜻합니다!" },
-		];
-		setMessages(initialMessages);
+		if (!cookies.token) {
+			alert("로그인 후 이용하세요");
+			window.location.replace("/login");
+		}
 	}, []);
 
-	useEffect(() => {
+	// MainView를 통해 들어온 경우
+	useEffect(async () => {
+		async function loadReviews(id) {
+			const res = await axios
+				.get("/review/load", {
+					params: { id: id },
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+
+			if (res.data.success) {
+				setIsLoaded(true);
+				setBaseUrl(res.data.data.url);
+				reviewId = res.data.data.id;
+				setForMore(reviewId);
+				setTitle(res.data.data.title);
+				setTotalRate(res.data.data.totalRate);
+				setReviews(res.data.data.reviews);
+				setThumbnail(res.data.data.thumbnail);
+			}
+		}
+
+		async function loadResult(id) {
+			const res = await axios
+				.get("/result/load", {
+					params: { id: id },
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+
+			if (res.data.success) {
+				// TODO: message logic 채워넣어야됌 --> 그래야 메세지 이슈 사라짐
+				const questionList = res.data.data.questionList;
+				if (questionList !== null) {
+					questionList.map((msg, idx) => {
+						setMessages((messages) => [
+							...messages,
+							{
+								animate: true,
+								sender: "user",
+								text: msg.question,
+							},
+						]);
+						setMessages((messages) => [
+							...messages,
+							{
+								animate: true,
+								sender: "bot",
+								text: msg.answer,
+							},
+						]);
+					});
+				}
+
+				reviewId = res.data.data.reviewId;
+				setResultEmail(res.data.data.member.email);
+			}
+		}
 		async function crawling() {
-			console.log("called");
+			removeCookies("reviewId");
+			removeCookies("resultId");
 			const res = await axios.post(
 				"/review/crawling",
 				{
@@ -129,10 +184,9 @@ function Chat() {
 			);
 
 			if (res.data.success) {
-				alert("크롤링 완료!");
-				console.log(res);
 				setIsLoaded(true);
-				setId(res.data.data.id);
+				reviewId = res.data.data.id;
+				setForMore(reviewId);
 				setTitle(res.data.data.title);
 				setTotalRate(res.data.data.totalRate);
 				setReviews(res.data.data.reviews);
@@ -142,7 +196,7 @@ function Chat() {
 					.post(
 						"/result/create",
 						{
-							reviewId: id,
+							reviewId: reviewId,
 						},
 						{
 							headers: {
@@ -151,9 +205,34 @@ function Chat() {
 						}
 					)
 					.then((res) => {
-						console.log(res);
-						if (res.data.sucess) {
-							setResultId(res.data.data.id);
+						if (res.data.success) {
+							resultId = res.data.data.id;
+							removeCookies("crawl");
+							setCookies("reviewId", reviewId, {
+								path: "/result",
+								secure: "/",
+								domain: "localhost",
+								sameSite: "strict",
+								expires: new Date(Date.now() + 3600000),
+							});
+							setCookies("resultId", resultId, {
+								path: "/result",
+								secure: "/",
+								domain: "localhost",
+								sameSite: "strict",
+								expires: new Date(Date.now() + 3600000),
+							});
+							setMessages((messages) => [
+								...messages,
+								{
+									animate: true,
+									sender: "bot",
+									text: "리뷰를 불러왔습니다!",
+								},
+							]);
+							reviewId = res.data.data.reviewId;
+							setResultEmail(res.data.data.member.email);
+							window.location.reload();
 						}
 					})
 					.catch((res) => {
@@ -161,71 +240,108 @@ function Chat() {
 					});
 			}
 		}
-
-		if (cookies[0].crawl === "yes") {
-			crawling();
-			removeCookieCrawl("crawl");
+		if (idParams.get("id")) {
+			removeCookies("resultId");
+			removeCookies("reviewId");
+			resultId = idParams.get("id");
+			await loadResult(resultId);
+			await loadReviews(reviewId);
+			setMoreText("리뷰 새로고침");
+		} else {
+			if (cookies.crawl === "yes") {
+				const initialMessages = [
+					// 애니메이션 적용: false
+					{
+						animate: true,
+						sender: "bot",
+						text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
+					},
+				];
+				setBaseUrl(url);
+				setMessages(initialMessages);
+				crawling();
+			} else {
+				const initialMessages = [
+					// 애니메이션 적용: false
+					{
+						animate: true,
+						sender: "bot",
+						text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
+					},
+				];
+				setMessages(initialMessages);
+				setMessages((messages) => [
+					...messages,
+					{
+						animate: true,
+						sender: "bot",
+						text: "리뷰를 불러왔습니다!",
+					},
+				]);
+				await loadReviews(cookies.reviewId);
+				await loadResult(cookies.resultId);
+			}
 		}
 	}, []);
 
-	// 기존 메시지 로딩
-	// useEffect(() => {
-	//   const fetchMessages = async () => {
-	//     try {
-	//       const id = "6649b5a5d5004d76b2c6ee40";
+	useEffect(() => {
+		axios
+			.get("/member/info", {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then((res) => {
+				if (res.data.success) {
+					setCurrentEmail(res.data.data.email);
+				} else {
+					alert("로그인 후 이용하세요");
+					window.location.href = "/login";
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	});
 
-	//       console.log('Sending request with ID:', id); // 요청 전에 로그 추가
-
-	//       const response = await axios.get('/result/load', {
-	//         params: { id }
-	//       });
-
-	//       console.log('Received response:', response); // 응답 후에 로그 추가
-
-	//       if (response.data.success) {
-	//         const questionList = response.data.data.questionList;
-	//         const initialMessages = questionList.map((data, index) => [
-	//           {
-	//             id: index * 2 + 1,
-	//             sender: 'user',
-	//             text: data.question,
-	//           },
-	//           {
-	//             id: index * 2 + 2,
-	//             sender: 'bot',
-	//             text: data.answer,
-	//           },
-	//         ]).flat();
-
-	//         setMessages(initialMessages);
-	//       } else {
-	//         console.error('Failed to fetch messages: ', response.data.message);
-	//       }
-	//     } catch (error) {
-	//       console.error('Failed to fetch messages:', error);
-	//     }
-	//   };
-
-	//   fetchMessages();
-	// }, []);
-
-	//사이드바 오픈 확인용
-
-	//사이드바 열림 상태 변경
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
 	};
 
 	//리뷰 더 불러오기
 	const loadMoreReviews = async () => {
+		setMessages((messages) => [
+			...messages,
+			{
+				animate: true,
+				sender: "bot",
+				text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
+			},
+		]);
+		let tempTimes;
+		if (moreText === "리뷰 새로고침") {
+			tempTimes = 1;
+		} else {
+			tempTimes = times + 1;
+		}
+
 		const res = await axios.post("/review/crawling/more", {
-			id: id,
-			times: times + 1,
+			id: forMore,
+			times: tempTimes,
 		});
 
 		if (res.data.success) {
-			alert("크롤링 완료!");
+			setMessages((messages) => [
+				...messages,
+				{
+					animate: true,
+					sender: "bot",
+					text: "리뷰를 불러왔습니다!",
+				},
+			]);
+			setReviews(null);
 			setReviews(res.data.data.reviews);
+			setMoreText("더보기");
 			setTimes(times + 1);
 		}
 	};
@@ -269,7 +385,7 @@ function Chat() {
 		}
 	}, [messages, isLoaded]);
 
-	return isLoaded ? (
+	return (
 		<Box sx={{ display: "flex" }}>
 			{/* 채팅 메시지 박스와 입력 박스를 포함하는 컨테이너 */}
 			<Box
@@ -299,18 +415,20 @@ function Chat() {
 					fullWidth
 					ref={ChatMessageScrollRef}
 				>
-					{messages.map((message) => (
-						<AnimatedMessage key={message.id} animate={message.animate}>
+					{messages.map((message, idx) => (
+						<AnimatedMessage key={idx} animate={message.animate}>
 							<ChatMessage message={message} animate={message.animate} />
 						</AnimatedMessage>
 					))}
 				</Box>
 				{/* 채팅 메시지 입력 박스 */}
-				<ChatMessageInputBox
-					inputValue={inputValue}
-					setInputValue={setInputValue}
-					addMessage={addMessage}
-				/>
+				{currentEmail === resultEmail && (
+					<ChatMessageInputBox
+						inputValue={inputValue}
+						setInputValue={setInputValue}
+						addMessage={addMessage}
+					/>
+				)}
 			</Box>
 
 			<Box
@@ -351,7 +469,11 @@ function Chat() {
 							animation: `${isSidebarOpen ? fadeIn : fadeOut} 0.5s forwards`,
 						}}
 					>
-						<ReviewAnalysis title={title} totalRate={Number(totalRate)} />
+						<ReviewAnalysis
+							title={title}
+							totalRate={Number(totalRate)}
+							url={baseUrl}
+						/>
 						{/* 썸네일 이미지 추가 */}
 						<Box sx={{ textAlign: "center", mt: 5 }}>
 							<img
@@ -374,27 +496,14 @@ function Chat() {
 								/>
 							))}
 							{/* 리뷰 더보기 버튼 추가 */}
-							<ReadMoreReview onClick={loadMoreReviews} />
+							{currentEmail === resultEmail && (
+								<ReadMoreReview onClick={loadMoreReviews} text={moreText} />
+							)}
 						</Box>
 					</Box>
 				)}
 			</Box>
 		</Box>
-	) : (
-		<div
-			style={{
-				paddingLeft: "250px",
-				paddingTop: "64px",
-				justifyContent: "center",
-				alignItems: "center",
-				fontSize: "50px",
-				width: "100vh",
-				height: "100vh",
-				fontWeight: "bold",
-			}}
-		>
-			<p>Loading...</p>
-		</div>
 	);
 }
 

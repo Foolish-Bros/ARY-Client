@@ -42,7 +42,6 @@ function Header() {
 					<Tooltip title="문의하기" placement="bottom">
 						<QuestionAnswerIcon
 							onClick={() => {
-								// TODO: 링크 수정
 								window.open(
 									"/question",
 									"window_name",
