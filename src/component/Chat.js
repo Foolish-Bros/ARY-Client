@@ -71,6 +71,7 @@ function Chat() {
 		"resultId",
 		"reviewId",
 	]);
+	const [baseUrl, setBaseUrl] = useState("");
 	const [currentEmail, setCurrentEmail] = useState("");
 	const [resultEmail, setResultEmail] = useState("");
 	const token = cookies.token;
@@ -79,6 +80,7 @@ function Chat() {
 	if (location.state) {
 		site = location.state.site;
 		url = location.state.url;
+		setBaseUrl(url);
 	}
 	const [messages, setMessages] = useState([]);
 
@@ -112,6 +114,7 @@ function Chat() {
 
 			if (res.data.success) {
 				setIsLoaded(true);
+				setBaseUrl(res.data.data.url);
 				reviewId = res.data.data.id;
 				setForMore(reviewId);
 				setTitle(res.data.data.title);
@@ -441,7 +444,11 @@ function Chat() {
 							animation: `${isSidebarOpen ? fadeIn : fadeOut} 0.5s forwards`,
 						}}
 					>
-						<ReviewAnalysis title={title} totalRate={Number(totalRate)} />
+						<ReviewAnalysis
+							title={title}
+							totalRate={Number(totalRate)}
+							url={baseUrl}
+						/>
 						{/* 썸네일 이미지 추가 */}
 						<Box sx={{ textAlign: "center", mt: 5 }}>
 							<img
