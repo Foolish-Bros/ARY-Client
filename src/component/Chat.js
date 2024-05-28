@@ -209,14 +209,12 @@ function Chat() {
 							resultId = res.data.data.id;
 							setCookies("reviewId", reviewId, {
 								path: "/result",
-								secure: "/",
 								domain: "all-review-young.site",
 								sameSite: "strict",
 								expires: new Date(Date.now() + 3600000),
 							});
 							setCookies("resultId", resultId, {
 								path: "/result",
-								secure: "/",
 								domain: "all-review-young.site",
 								sameSite: "strict",
 								expires: new Date(Date.now() + 3600000),
