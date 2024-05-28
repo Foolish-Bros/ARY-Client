@@ -207,7 +207,6 @@ function Chat() {
 					.then((res) => {
 						if (res.data.success) {
 							resultId = res.data.data.id;
-							removeCookies("crawl");
 							setCookies("reviewId", reviewId, {
 								path: "/result",
 								secure: "/",
@@ -230,6 +229,7 @@ function Chat() {
 									text: "리뷰를 불러왔습니다!",
 								},
 							]);
+							removeCookies("crawl");
 							reviewId = res.data.data.reviewId;
 							setResultEmail(res.data.data.member.email);
 							window.location.reload();
@@ -259,7 +259,7 @@ function Chat() {
 				];
 				setBaseUrl(url);
 				setMessages(initialMessages);
-				crawling();
+				await crawling();
 			} else {
 				const initialMessages = [
 					// 애니메이션 적용: false
