@@ -64,7 +64,7 @@ const AnimatedMessage = styled("div")(({ theme, animate }) => ({
 
 function Chat() {
 	const location = useLocation();
-	const [idParams, setIdParams] = useSearchParams();
+	const [idParams] = useSearchParams();
 	const [cookies, setCookies, removeCookies] = useCookies([
 		"token",
 		"crawl",
@@ -80,7 +80,6 @@ function Chat() {
 	if (location.state) {
 		site = location.state.site;
 		url = location.state.url;
-		setBaseUrl(url);
 	}
 	const [messages, setMessages] = useState([]);
 
@@ -250,10 +249,11 @@ function Chat() {
 						text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
 					},
 				];
+				setBaseUrl(url);
 				setMessages(initialMessages);
 				crawling();
 			} else {
-				loadReviews(cookies.reviewId);
+				await loadReviews(cookies.reviewId);
 				await loadResult(cookies.resultId);
 			}
 		}
