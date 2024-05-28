@@ -15,7 +15,7 @@ import ChatMessage from "./ChatMessage";
 import ChatMessageInputBox from "./ChatMessageInputBox";
 
 import axios from "../axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 //사이드바 오픈 버튼 애니메이션 효과
@@ -64,14 +64,21 @@ const AnimatedMessage = styled("div")(({ theme, animate }) => ({
 
 function Chat() {
 	const location = useLocation();
-	const cookies = useCookies(["token"]);
-	const [cookieCrawl, setCookieCrawl, removeCookieCrawl] = useCookies([
+	const [idParams, setIdParams] = useSearchParams();
+	const [cookies, setCookies, removeCookies] = useCookies([
+		"token",
 		"crawl",
+		"resultId",
+		"reviewId",
 	]);
-	const token = cookies[0].token;
-	const site = location.state.site;
-	const url = location.state.url;
-	const [messages, setMessages] = useState([]);
+	const token = cookies.token;
+	let site;
+	let url;
+	if (location.state) {
+		site = location.state.site;
+		url = location.state.url;
+	}
+	const [messages, setMessages] = useState([{}]);
 
 	//로딩되었는지 확인하는 용도
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -79,7 +86,7 @@ function Chat() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	// 오른쪽 사이드바 리뷰 관련
-	const [id, setId] = useState("");
+	let reviewId = "";
 	const [title, setTitle] = useState("");
 	const [totalRate, setTotalRate] = useState("");
 	const [reviews, setReviews] = useState([]);
@@ -87,34 +94,58 @@ function Chat() {
 	const [times, setTimes] = useState(1);
 
 	// 결과 관련
-	const [resultId, setResultId] = useState("");
+	let resultId = "";
 
-	// 기존 메시지 로딩
-	useEffect(() => {
-		console.log(site);
-		console.log(url);
-		// API 호출을 통해 메시지를 가져오는 코드를 여기에 작성
-		const initialMessages = [
-			// 애니메이션 적용: false
-			{
-				id: 1,
-				sender: "user",
-				text: "https://www.coupang.com/vp/products/7945128164?itemId=22552512026&vendorItemId=89594440513&sourceType=CATEGORY&categoryId=502895&isAddedCart= 분석해주세요!",
-			},
-			{
-				id: 2,
-				sender: "bot",
-				text: "리뷰를 분석 중입니다... 분석이 완료되었습니다!",
-			},
-			{ id: 3, sender: "user", text: "오늘 날씨 어때요?" },
-			{ id: 4, sender: "bot", text: "오늘은 맑고 따뜻합니다!" },
-		];
-		setMessages(initialMessages);
-	}, []);
+	// useEffect(() => {
+	// 	if (isLoaded) {
+	// 		setMessages((messages) => [
+	// 			...messages,
+	// 			{
+	// 				sender: "bot",
+	// 				text: "리뷰를 불러왔습니다!",
+	// 			},
+	// 		]);
+	// 	}
+	// }, [isLoaded]);
 
-	useEffect(() => {
+	// MainView를 통해 들어온 경우
+	useEffect(async () => {
+		async function loadReviews(id) {
+			const res = await axios
+				.get("/review/load", {
+					params: { id: id },
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+
+			if (res.data.success) {
+				setIsLoaded(true);
+				reviewId = res.data.data.id;
+				setTitle(res.data.data.title);
+				setTotalRate(res.data.data.totalRate);
+				setReviews(res.data.data.reviews);
+				setThumbnail(res.data.data.thumbnail);
+			}
+		}
+
+		async function loadResult(id) {
+			const res = await axios
+				.get("/result/load", {
+					params: { id: id },
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+
+			if (res.data.success) {
+				// TODO: message logic 채워넣어야됌 --> 그래야 메세지 이슈 사라짐
+				reviewId = res.data.data.reviewId;
+			}
+		}
 		async function crawling() {
-			console.log("called");
+			removeCookies("reviewId");
+			removeCookies("resultId");
 			const res = await axios.post(
 				"/review/crawling",
 				{
@@ -129,10 +160,9 @@ function Chat() {
 			);
 
 			if (res.data.success) {
-				alert("크롤링 완료!");
 				console.log(res);
 				setIsLoaded(true);
-				setId(res.data.data.id);
+				reviewId = res.data.data.id;
 				setTitle(res.data.data.title);
 				setTotalRate(res.data.data.totalRate);
 				setReviews(res.data.data.reviews);
@@ -142,7 +172,7 @@ function Chat() {
 					.post(
 						"/result/create",
 						{
-							reviewId: id,
+							reviewId: reviewId,
 						},
 						{
 							headers: {
@@ -151,9 +181,31 @@ function Chat() {
 						}
 					)
 					.then((res) => {
-						console.log(res);
-						if (res.data.sucess) {
-							setResultId(res.data.data.id);
+						if (res.data.success) {
+							resultId = res.data.data.id;
+							removeCookies("crawl");
+							setCookies("reviewId", reviewId, {
+								path: "/result",
+								secure: "/",
+								domain: "localhost",
+								sameSite: "strict",
+								expires: new Date(Date.now() + 3600000),
+							});
+							setCookies("resultId", resultId, {
+								path: "/result",
+								secure: "/",
+								domain: "localhost",
+								sameSite: "strict",
+								expires: new Date(Date.now() + 3600000),
+							});
+							setMessages((messages) => [
+								...messages,
+								{
+									animate: true,
+									sender: "bot",
+									text: "리뷰를 불러왔습니다!",
+								},
+							]);
 						}
 					})
 					.catch((res) => {
@@ -161,12 +213,74 @@ function Chat() {
 					});
 			}
 		}
-
-		if (cookies[0].crawl === "yes") {
-			crawling();
-			removeCookieCrawl("crawl");
+		if (idParams.get("id")) {
+			removeCookies("resultId");
+			removeCookies("reviewId");
+			resultId = idParams.get("id");
+			await loadResult(resultId);
+			loadReviews(reviewId);
+		} else {
+			if (cookies.crawl === "yes") {
+				const initialMessages = [
+					// 애니메이션 적용: false
+					{
+						animate: true,
+						sender: "bot",
+						text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
+					},
+				];
+				setMessages(initialMessages);
+				crawling();
+			} else {
+				resultId = cookies.resultId;
+				loadReviews(cookies.reviewId);
+				loadResult(cookies.resultId);
+			}
 		}
 	}, []);
+
+	// // 이미 한번 크롤링하고 새로고침하는 경우
+	// useEffect(() => {
+	// 	async function loadReviews() {
+	// 		const res = await axios
+	// 			.get("/review/load", {
+	// 				params: { id: cookies.reviewId },
+	// 			})
+	// 			.catch((err) => {
+	// 				console.log(err);
+	// 			});
+
+	// 		if (res.data.success) {
+	// 			setIsLoaded(true);
+	// 			id = res.data.data.id;
+	// 			setTitle(res.data.data.title);
+	// 			setTotalRate(res.data.data.totalRate);
+	// 			setReviews(res.data.data.reviews);
+	// 			setThumbnail(res.data.data.thumbnail);
+	// 		}
+	// 	}
+
+	// 	async function loadResult() {
+	// 		const res = await axios
+	// 			.get("/result/load", {
+	// 				params: { id: cookies.resultId },
+	// 			})
+	// 			.catch((err) => {
+	// 				console.log(err);
+	// 			});
+	// 		console.log(res);
+	// 		if (res.data.success) {
+	// 			// TODO: message logic 채워넣어야됌
+	// 			alert("called");
+	// 		}
+	// 	}
+
+	// 	if (cookies.reviewId && cookies.resultId) {
+	// 		alert("refresh");
+	// 		loadReviews();
+	// 		loadResult();
+	// 	}
+	// }, []);
 
 	// 기존 메시지 로딩
 	// useEffect(() => {
@@ -212,19 +326,35 @@ function Chat() {
 	//사이드바 오픈 확인용
 
 	//사이드바 열림 상태 변경
+
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
 	};
 
 	//리뷰 더 불러오기
 	const loadMoreReviews = async () => {
+		setMessages((messages) => [
+			...messages,
+			{
+				animate: true,
+				sender: "bot",
+				text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
+			},
+		]);
 		const res = await axios.post("/review/crawling/more", {
-			id: id,
+			id: reviewId,
 			times: times + 1,
 		});
 
 		if (res.data.success) {
-			alert("크롤링 완료!");
+			setMessages((messages) => [
+				...messages,
+				{
+					animate: true,
+					sender: "bot",
+					text: "리뷰를 불러왔습니다!",
+				},
+			]);
 			setReviews(res.data.data.reviews);
 			setTimes(times + 1);
 		}
@@ -269,7 +399,7 @@ function Chat() {
 		}
 	}, [messages, isLoaded]);
 
-	return isLoaded ? (
+	return (
 		<Box sx={{ display: "flex" }}>
 			{/* 채팅 메시지 박스와 입력 박스를 포함하는 컨테이너 */}
 			<Box
@@ -299,8 +429,8 @@ function Chat() {
 					fullWidth
 					ref={ChatMessageScrollRef}
 				>
-					{messages.map((message) => (
-						<AnimatedMessage key={message.id} animate={message.animate}>
+					{messages.map((message, idx) => (
+						<AnimatedMessage key={idx} animate={message.animate}>
 							<ChatMessage message={message} animate={message.animate} />
 						</AnimatedMessage>
 					))}
@@ -380,21 +510,6 @@ function Chat() {
 				)}
 			</Box>
 		</Box>
-	) : (
-		<div
-			style={{
-				paddingLeft: "250px",
-				paddingTop: "64px",
-				justifyContent: "center",
-				alignItems: "center",
-				fontSize: "50px",
-				width: "100vh",
-				height: "100vh",
-				fontWeight: "bold",
-			}}
-		>
-			<p>Loading...</p>
-		</div>
 	);
 }
 

@@ -24,6 +24,9 @@ function MainView() {
 	const [selectedSite, setSelectedSite] = useState("");
 	const [url, setUrl] = useState("");
 
+	// 최근 리뷰 가져오기
+	const [recentReviews, setRecentReviews] = useState([{}]);
+
 	// 사용 가능한 사이트 목록
 	const sites = [
 		{ value: "1", label: "쿠팡" },
@@ -52,6 +55,15 @@ function MainView() {
 			});
 	}, []);
 
+	useEffect(() => {
+		axios.get("/result/recent").then((res) => {
+			if (res.data.success) {
+				setRecentReviews(res.data.data);
+				console.log(res);
+			}
+		});
+	}, []);
+
 	// 사이트 선택 변경 핸들러
 	const handleSiteChange = (event) => {
 		setSelectedSite(event.target.value);
@@ -66,9 +78,9 @@ function MainView() {
 	const onSubmitCrawling = () => {
 		if (sites && url) {
 			setCookieCrawl("crawl", "yes", {
-				path: "/result",
+				path: "/",
 				secure: "/",
-				domain: "all-review-young.site",
+				domain: "localhost",
 				sameSite: "strict",
 				expires: new Date(Date.now() + 3600000),
 			});
@@ -85,8 +97,8 @@ function MainView() {
 	};
 
 	// Handle navigation to result page
-	const handleRoundboxClick = (item) => {
-		navigate(`/result?query=${item}`);
+	const handleRoundboxClick = (id) => {
+		window.location.href = `/result?id=${id}`;
 	};
 
 	return (
@@ -147,32 +159,14 @@ function MainView() {
 						</div>
 					</div>
 					<div className={styles.recommandContainer}>
-						<div
-							className={styles.roundbox}
-							onClick={() => handleRoundboxClick("맨투맨")}
-						>
-							맨투맨
-						</div>
-
-						<div
-							className={styles.roundbox}
-							onClick={() => handleRoundboxClick("운동화")}
-						>
-							운동화
-						</div>
-
-						<div
-							className={styles.roundbox}
-							onClick={() => handleRoundboxClick("애견 간식")}
-						>
-							애견 간식
-						</div>
-						<div
-							className={styles.roundbox}
-							onClick={() => handleRoundboxClick("애견 간식")}
-						>
-							애견 간식
-						</div>
+						{recentReviews.map((reviews, idx) => (
+							<div
+								className={styles.roundbox}
+								onClick={() => handleRoundboxClick(reviews.id)}
+							>
+								{reviews.title}
+							</div>
+						))}
 					</div>
 				</div>
 			</main>
