@@ -66,9 +66,9 @@ function MainView() {
 	const onSubmitCrawling = () => {
 		if (sites && url) {
 			setCookieCrawl("crawl", "yes", {
-				path: "/result",
+				path: "/",
 				secure: "/",
-				domain: "all-review-young.site",
+				domain: "localhost",
 				sameSite: "strict",
 				expires: new Date(Date.now() + 3600000),
 			});

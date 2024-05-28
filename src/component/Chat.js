@@ -64,14 +64,16 @@ const AnimatedMessage = styled("div")(({ theme, animate }) => ({
 
 function Chat() {
 	const location = useLocation();
-	const cookies = useCookies(["token"]);
-	const [cookieCrawl, setCookieCrawl, removeCookieCrawl] = useCookies([
+	const [cookies, setCookies, removeCookies] = useCookies([
+		"token",
 		"crawl",
+		"resultId",
+		"reviewId",
 	]);
-	const token = cookies[0].token;
+	const token = cookies.token;
 	const site = location.state.site;
 	const url = location.state.url;
-	const [messages, setMessages] = useState([]);
+	const [messages, setMessages] = useState(["token"]);
 
 	//로딩되었는지 확인하는 용도
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -79,7 +81,7 @@ function Chat() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	// 오른쪽 사이드바 리뷰 관련
-	const [id, setId] = useState("");
+	let id = "";
 	const [title, setTitle] = useState("");
 	const [totalRate, setTotalRate] = useState("");
 	const [reviews, setReviews] = useState([]);
@@ -87,12 +89,10 @@ function Chat() {
 	const [times, setTimes] = useState(1);
 
 	// 결과 관련
-	const [resultId, setResultId] = useState("");
+	let resultId = "";
 
 	// 기존 메시지 로딩
 	useEffect(() => {
-		console.log(site);
-		console.log(url);
 		// API 호출을 통해 메시지를 가져오는 코드를 여기에 작성
 		const initialMessages = [
 			// 애니메이션 적용: false
@@ -112,9 +112,44 @@ function Chat() {
 		setMessages(initialMessages);
 	}, []);
 
+	// MainView를 통해 들어온 경우(크롤링 검색을 한 경우)
 	useEffect(() => {
+		async function loadReviews() {
+			const res = await axios
+				.get("/review/load", {
+					params: { id: cookies.reviewId },
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+
+			if (res.data.success) {
+				setIsLoaded(true);
+				id = res.data.data.id;
+				setTitle(res.data.data.title);
+				setTotalRate(res.data.data.totalRate);
+				setReviews(res.data.data.reviews);
+				setThumbnail(res.data.data.thumbnail);
+			}
+		}
+
+		async function loadResult() {
+			const res = await axios
+				.get("/result/load", {
+					params: { id: cookies.resultId },
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+
+			if (res.data.success) {
+				// TODO: message logic 채워넣어야됌
+				alert("called");
+			}
+		}
 		async function crawling() {
-			console.log("called");
+			removeCookies("reviewId");
+			removeCookies("resultId");
 			const res = await axios.post(
 				"/review/crawling",
 				{
@@ -132,13 +167,13 @@ function Chat() {
 				alert("크롤링 완료!");
 				console.log(res);
 				setIsLoaded(true);
-				setId(res.data.data.id);
+				id = res.data.data.id;
 				setTitle(res.data.data.title);
 				setTotalRate(res.data.data.totalRate);
 				setReviews(res.data.data.reviews);
 				setThumbnail(res.data.data.thumbnail);
 
-				await axios
+				axios
 					.post(
 						"/result/create",
 						{
@@ -151,9 +186,23 @@ function Chat() {
 						}
 					)
 					.then((res) => {
-						console.log(res);
-						if (res.data.sucess) {
-							setResultId(res.data.data.id);
+						if (res.data.success) {
+							resultId = res.data.data.id;
+							removeCookies("crawl");
+							setCookies("reviewId", id, {
+								path: "/result",
+								secure: "/",
+								domain: "localhost",
+								sameSite: "strict",
+								expires: new Date(Date.now() + 3600000),
+							});
+							setCookies("resultId", resultId, {
+								path: "/result",
+								secure: "/",
+								domain: "localhost",
+								sameSite: "strict",
+								expires: new Date(Date.now() + 3600000),
+							});
 						}
 					})
 					.catch((res) => {
@@ -161,12 +210,56 @@ function Chat() {
 					});
 			}
 		}
-
-		if (cookies[0].crawl === "yes") {
+		if (cookies.crawl === "yes") {
 			crawling();
-			removeCookieCrawl("crawl");
+		} else {
+			loadReviews();
+			loadResult();
 		}
 	}, []);
+
+	// // 이미 한번 크롤링하고 새로고침하는 경우
+	// useEffect(() => {
+	// 	async function loadReviews() {
+	// 		const res = await axios
+	// 			.get("/review/load", {
+	// 				params: { id: cookies.reviewId },
+	// 			})
+	// 			.catch((err) => {
+	// 				console.log(err);
+	// 			});
+
+	// 		if (res.data.success) {
+	// 			setIsLoaded(true);
+	// 			id = res.data.data.id;
+	// 			setTitle(res.data.data.title);
+	// 			setTotalRate(res.data.data.totalRate);
+	// 			setReviews(res.data.data.reviews);
+	// 			setThumbnail(res.data.data.thumbnail);
+	// 		}
+	// 	}
+
+	// 	async function loadResult() {
+	// 		const res = await axios
+	// 			.get("/result/load", {
+	// 				params: { id: cookies.resultId },
+	// 			})
+	// 			.catch((err) => {
+	// 				console.log(err);
+	// 			});
+	// 		console.log(res);
+	// 		if (res.data.success) {
+	// 			// TODO: message logic 채워넣어야됌
+	// 			alert("called");
+	// 		}
+	// 	}
+
+	// 	if (cookies.reviewId && cookies.resultId) {
+	// 		alert("refresh");
+	// 		loadReviews();
+	// 		loadResult();
+	// 	}
+	// }, []);
 
 	// 기존 메시지 로딩
 	// useEffect(() => {
@@ -269,7 +362,7 @@ function Chat() {
 		}
 	}, [messages, isLoaded]);
 
-	return isLoaded ? (
+	return isLoaded || cookies.crawl !== "yes" ? (
 		<Box sx={{ display: "flex" }}>
 			{/* 채팅 메시지 박스와 입력 박스를 포함하는 컨테이너 */}
 			<Box
@@ -299,8 +392,8 @@ function Chat() {
 					fullWidth
 					ref={ChatMessageScrollRef}
 				>
-					{messages.map((message) => (
-						<AnimatedMessage key={message.id} animate={message.animate}>
+					{messages.map((message, idx) => (
+						<AnimatedMessage key={idx} animate={message.animate}>
 							<ChatMessage message={message} animate={message.animate} />
 						</AnimatedMessage>
 					))}
