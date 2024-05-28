@@ -78,7 +78,7 @@ function Chat() {
 		site = location.state.site;
 		url = location.state.url;
 	}
-	const [messages, setMessages] = useState([{}]);
+	const [messages, setMessages] = useState([]);
 
 	//로딩되었는지 확인하는 용도
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -139,7 +139,27 @@ function Chat() {
 				});
 
 			if (res.data.success) {
+				console.log(messages);
 				// TODO: message logic 채워넣어야됌 --> 그래야 메세지 이슈 사라짐
+				const questionList = res.data.data.questionList;
+				questionList.map((msg, idx) => {
+					setMessages((messages) => [
+						...messages,
+						{
+							animate: true,
+							sender: "user",
+							text: msg.question,
+						},
+					]);
+					setMessages((messages) => [
+						...messages,
+						{
+							animate: true,
+							sender: "bot",
+							text: msg.answer,
+						},
+					]);
+				});
 				reviewId = res.data.data.reviewId;
 			}
 		}
@@ -270,7 +290,6 @@ function Chat() {
 	// 			});
 	// 		console.log(res);
 	// 		if (res.data.success) {
-	// 			// TODO: message logic 채워넣어야됌
 	// 			alert("called");
 	// 		}
 	// 	}

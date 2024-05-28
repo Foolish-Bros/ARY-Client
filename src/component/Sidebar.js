@@ -28,7 +28,7 @@ const Sidebar = () => {
 	const [itemData, setItemData] = useState([]); // id와 reviewId를 저장할 상태
 
 	//쿠키
-	const [cookies, setCookies, removeCookie] = useCookies(['token']);
+	const [cookies, setCookies, removeCookie] = useCookies(["token"]);
 
 	useEffect(() => {
 		const token = cookies.token;
@@ -40,14 +40,16 @@ const Sidebar = () => {
 			})
 			.then((res) => {
 				if (res.data.success) {
-					const chatItems = res.data.data.map(item => item.title || '');
-					const lastQuestionItems = res.data.data.map(item => {
-                        const questions = item.questionList;
-                        return questions.length > 0 ? questions[questions.length - 1].question : '';
-                    });
-					const itemData = res.data.data.map(item => ({
+					const chatItems = res.data.data.map((item) => item.title || "");
+					const lastQuestionItems = res.data.data.map((item) => {
+						const questions = item.questionList;
+						return questions.length > 0
+							? questions[questions.length - 1].question
+							: "";
+					});
+					const itemData = res.data.data.map((item) => ({
 						id: item.id,
-						reviewId: item.reviewId
+						reviewId: item.reviewId,
 					}));
 					setChatItems(chatItems);
 					setlastQuestionItems(lastQuestionItems);
@@ -57,7 +59,6 @@ const Sidebar = () => {
 					if (res.data.data.length > 0 && res.data.data[0].member) {
 						setUsername(res.data.data[0].member.name);
 					}
-
 				} else {
 					alert("초기 데이터 설정에서 오류가 발생하였습니다.");
 				}
@@ -65,15 +66,14 @@ const Sidebar = () => {
 			.catch((err) => {
 				console.log(err);
 			});
-
 	}, [cookies.token]);
 
 	const clickHandler = (index, text) => {
-		if (text === "") {
+		if (text === "new") {
 			window.location.href = "/";
 		} else {
 			const resultId = itemData[index].id;
-			if(resultId){
+			if (resultId) {
 				window.location.href = `/result?id=${resultId}`;
 			}
 		}
@@ -87,8 +87,12 @@ const Sidebar = () => {
 				.delete("/result/delete", { data: { resultId } })
 				.then((res) => {
 					if (res.data.success) {
-						setChatItems((prevItems) => prevItems.filter((_, i) => i !== index));
-						setlastQuestionItems((prevItems) => prevItems.filter((_, i) => i !== index));
+						setChatItems((prevItems) =>
+							prevItems.filter((_, i) => i !== index)
+						);
+						setlastQuestionItems((prevItems) =>
+							prevItems.filter((_, i) => i !== index)
+						);
 						setItemData((prevItems) => prevItems.filter((_, i) => i !== index)); // 삭제 시 itemData도 업데이트
 					} else {
 						alert("삭제에 실패하였습니다.");
@@ -158,7 +162,7 @@ const Sidebar = () => {
 						}
 						secondary={
 							lastQuestionItems[index] &&
-								lastQuestionItems[index].length > 20 ? (
+							lastQuestionItems[index].length > 20 ? (
 								<Box
 									component="span"
 									sx={{
@@ -217,7 +221,7 @@ const Sidebar = () => {
 			>
 				<ListItem
 					button
-					onClick={() => clickHandler("")}
+					onClick={() => clickHandler("new")}
 					sx={{
 						display: "flex",
 						justifyContent: "space-between",
