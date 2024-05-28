@@ -120,7 +120,6 @@ function Chat() {
 	// MainView를 통해 들어온 경우(크롤링 검색을 한 경우)
 	useEffect(async () => {
 		async function loadReviews(id) {
-			alert(id);
 			const res = await axios
 				.get("/review/load", {
 					params: { id: id },
