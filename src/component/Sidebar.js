@@ -78,7 +78,7 @@ const Sidebar = () => {
 		const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
 		if (confirmDelete) {
 			const resultId = itemData[index].id; //리뷰 아이디와 구별을 위해 id를 결과 아이디로 사용
-			/*axios
+			axios
 				.delete("/result/delete", { data: { resultId } })
 				.then((res) => {
 					if (res.data.success) {
@@ -91,7 +91,7 @@ const Sidebar = () => {
 				})
 				.catch((err) => {
 					console.log(err);
-				});*/
+				});
 		}
 	};
 
