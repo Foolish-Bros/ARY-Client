@@ -227,7 +227,10 @@ function Chat() {
 									text: "리뷰를 불러왔습니다!",
 								},
 							]);
-							removeCookies("crawl");
+							removeCookies("crawl", {
+								path: "/",
+								domain: "all-review-young.site",
+							});
 							reviewId = res.data.data.reviewId;
 							setResultEmail(res.data.data.member.email);
 							window.location.reload();
@@ -239,8 +242,14 @@ function Chat() {
 			}
 		}
 		if (idParams.get("id")) {
-			removeCookies("resultId");
-			removeCookies("reviewId");
+			removeCookies("resultId", {
+				path: "/result",
+				domain: "all-review-young.site",
+			});
+			removeCookies("reviewId", {
+				path: "/result",
+				domain: "all-review-young.site",
+			});
 			resultId = idParams.get("id");
 			await loadResult(resultId);
 			await loadReviews(reviewId);
