@@ -59,7 +59,6 @@ function MainView() {
 		axios.get("/result/recent").then((res) => {
 			if (res.data.success) {
 				setRecentReviews(res.data.data);
-				console.log(res);
 			}
 		});
 	}, []);

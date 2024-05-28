@@ -225,6 +225,7 @@ function Chat() {
 							]);
 							reviewId = res.data.data.reviewId;
 							setResultEmail(res.data.data.member.email);
+							window.location.reload();
 						}
 					})
 					.catch((res) => {
@@ -253,6 +254,23 @@ function Chat() {
 				setMessages(initialMessages);
 				crawling();
 			} else {
+				const initialMessages = [
+					// 애니메이션 적용: false
+					{
+						animate: true,
+						sender: "bot",
+						text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
+					},
+				];
+				setMessages(initialMessages);
+				setMessages((messages) => [
+					...messages,
+					{
+						animate: true,
+						sender: "bot",
+						text: "리뷰를 불러왔습니다!",
+					},
+				]);
 				await loadReviews(cookies.reviewId);
 				await loadResult(cookies.resultId);
 			}

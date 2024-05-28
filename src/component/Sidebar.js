@@ -221,7 +221,7 @@ const Sidebar = () => {
 			>
 				<ListItem
 					button
-					onClick={() => clickHandler("new")}
+					onClick={() => clickHandler(1, "new")}
 					sx={{
 						display: "flex",
 						justifyContent: "space-between",
