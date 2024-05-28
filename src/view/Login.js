@@ -29,6 +29,12 @@ const LoginPage = () => {
 		setPassword(event.target.value);
 	};
 
+	const handleKeyPress = (event) => {
+		if (event.key === "Enter") {
+			handleLogin(event);
+		}
+	};
+
 	const handleLogin = (e) => {
 		e.preventDefault();
 
@@ -111,6 +117,7 @@ const LoginPage = () => {
 								autoComplete="current-password"
 								value={password}
 								onChange={handlePasswordChange}
+								onKeyPress={handleKeyPress}
 								InputLabelProps={{
 									style: { color: "green" }, // 활성화됐을 때 강조되는 색상을 여기에서 지정합니다.
 								}}
@@ -139,6 +146,7 @@ const LoginPage = () => {
 									variant="contained"
 									style={{
 										backgroundColor: "#E3E3E3",
+										color: "#333",
 										boxShadow: "none",
 									}}
 									onClick={handleSignUp}
