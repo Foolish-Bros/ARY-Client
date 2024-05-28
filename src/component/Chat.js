@@ -84,7 +84,7 @@ function Chat() {
 
 	//로딩되었는지 확인하는 용도
 	const [isLoaded, setIsLoaded] = useState(false);
-
+	const [moreText, setMoreText] = useState("더보기");
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	// 오른쪽 사이드바 리뷰 관련
@@ -236,6 +236,7 @@ function Chat() {
 			resultId = idParams.get("id");
 			await loadResult(resultId);
 			await loadReviews(reviewId);
+			setMoreText("리뷰 새로고침");
 		} else {
 			if (cookies.crawl === "yes") {
 				const initialMessages = [
@@ -289,9 +290,16 @@ function Chat() {
 				text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
 			},
 		]);
+		let tempTimes;
+		if (moreText === "리뷰 새로고침") {
+			tempTimes = 1;
+		} else {
+			tempTimes = times + 1;
+		}
+
 		const res = await axios.post("/review/crawling/more", {
 			id: forMore,
-			times: times + 1,
+			times: tempTimes,
 		});
 
 		if (res.data.success) {
@@ -303,7 +311,9 @@ function Chat() {
 					text: "리뷰를 불러왔습니다!",
 				},
 			]);
+			setReviews(null);
 			setReviews(res.data.data.reviews);
+			setMoreText("더보기");
 			setTimes(times + 1);
 		}
 	};
@@ -455,7 +465,7 @@ function Chat() {
 							))}
 							{/* 리뷰 더보기 버튼 추가 */}
 							{currentEmail === resultEmail && (
-								<ReadMoreReview onClick={loadMoreReviews} times={times} />
+								<ReadMoreReview onClick={loadMoreReviews} text={moreText} />
 							)}
 						</Box>
 					</Box>

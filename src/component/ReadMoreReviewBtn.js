@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
 
-const ReadMoreReview = ({ onClick, times }) => {
+const ReadMoreReview = ({ onClick, text }) => {
 	return (
 		<Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
 			<Button
@@ -15,7 +15,7 @@ const ReadMoreReview = ({ onClick, times }) => {
 					},
 				}}
 			>
-				더보기
+				{text}
 			</Button>
 		</Box>
 	);
