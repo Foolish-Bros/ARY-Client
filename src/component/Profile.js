@@ -10,10 +10,9 @@ import {useCookies} from "react-cookie";
 
 import SettingsModal from "./SettingsModal";
 
-const Profile = () => {
+const Profile = ({username}) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [tabValue, setTabValue] = useState(0);
-    const username = "김창식"; // 예시 사용자 이름
 
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(['token'])
