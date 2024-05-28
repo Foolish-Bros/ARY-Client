@@ -11,6 +11,7 @@
 	height: 100vh; /* Ensure the main element takes the full viewport height */
 	overflow: auto;
 	margin-left: 250px;
+	cursor: default;
 }
 
 .toolBar {
@@ -136,6 +137,7 @@
 	margin: 8px 10px 10px 0;
 	border-radius: 20px; /* Assuming 1 spacing unit is 8px */
 	border: 1px solid #7b7a78; /* Adds a 2px solid black border */
+	cursor: pointer;
 }
 
 .roundbox:hover {

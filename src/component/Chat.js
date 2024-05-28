@@ -15,7 +15,7 @@ import ChatMessage from "./ChatMessage";
 import ChatMessageInputBox from "./ChatMessageInputBox";
 
 import axios from "../axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 //사이드바 오픈 버튼 애니메이션 효과
@@ -64,6 +64,7 @@ const AnimatedMessage = styled("div")(({ theme, animate }) => ({
 
 function Chat() {
 	const location = useLocation();
+	const [idParams, setIdParams] = useSearchParams();
 	const [cookies, setCookies, removeCookies] = useCookies([
 		"token",
 		"crawl",
@@ -71,8 +72,12 @@ function Chat() {
 		"reviewId",
 	]);
 	const token = cookies.token;
-	const site = location.state.site;
-	const url = location.state.url;
+	let site;
+	let url;
+	if (location.state) {
+		site = location.state.site;
+		url = location.state.url;
+	}
 	const [messages, setMessages] = useState(["token"]);
 
 	//로딩되었는지 확인하는 용도
@@ -81,7 +86,7 @@ function Chat() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	// 오른쪽 사이드바 리뷰 관련
-	let id = "";
+	let reviewId = "";
 	const [title, setTitle] = useState("");
 	const [totalRate, setTotalRate] = useState("");
 	const [reviews, setReviews] = useState([]);
@@ -113,11 +118,12 @@ function Chat() {
 	}, []);
 
 	// MainView를 통해 들어온 경우(크롤링 검색을 한 경우)
-	useEffect(() => {
-		async function loadReviews() {
+	useEffect(async () => {
+		async function loadReviews(id) {
+			alert(id);
 			const res = await axios
 				.get("/review/load", {
-					params: { id: cookies.reviewId },
+					params: { id: id },
 				})
 				.catch((err) => {
 					console.log(err);
@@ -125,7 +131,7 @@ function Chat() {
 
 			if (res.data.success) {
 				setIsLoaded(true);
-				id = res.data.data.id;
+				reviewId = res.data.data.id;
 				setTitle(res.data.data.title);
 				setTotalRate(res.data.data.totalRate);
 				setReviews(res.data.data.reviews);
@@ -133,10 +139,10 @@ function Chat() {
 			}
 		}
 
-		async function loadResult() {
+		async function loadResult(id) {
 			const res = await axios
 				.get("/result/load", {
-					params: { id: cookies.resultId },
+					params: { id: id },
 				})
 				.catch((err) => {
 					console.log(err);
@@ -144,7 +150,7 @@ function Chat() {
 
 			if (res.data.success) {
 				// TODO: message logic 채워넣어야됌
-				alert("called");
+				reviewId = res.data.data.reviewId;
 			}
 		}
 		async function crawling() {
@@ -167,7 +173,7 @@ function Chat() {
 				alert("크롤링 완료!");
 				console.log(res);
 				setIsLoaded(true);
-				id = res.data.data.id;
+				reviewId = res.data.data.id;
 				setTitle(res.data.data.title);
 				setTotalRate(res.data.data.totalRate);
 				setReviews(res.data.data.reviews);
@@ -177,7 +183,7 @@ function Chat() {
 					.post(
 						"/result/create",
 						{
-							reviewId: id,
+							reviewId: reviewId,
 						},
 						{
 							headers: {
@@ -189,7 +195,7 @@ function Chat() {
 						if (res.data.success) {
 							resultId = res.data.data.id;
 							removeCookies("crawl");
-							setCookies("reviewId", id, {
+							setCookies("reviewId", reviewId, {
 								path: "/result",
 								secure: "/",
 								domain: "localhost",
@@ -210,11 +216,20 @@ function Chat() {
 					});
 			}
 		}
-		if (cookies.crawl === "yes") {
-			crawling();
+		if (idParams) {
+			removeCookies("resultId");
+			removeCookies("reviewId");
+			resultId = idParams.get("id");
+			await loadResult(resultId);
+			loadReviews(reviewId);
 		} else {
-			loadReviews();
-			loadResult();
+			if (cookies.crawl === "yes") {
+				crawling();
+			} else {
+				resultId = cookies.resultId;
+				loadReviews(cookies.reviewId);
+				loadResult(cookies.resultId);
+			}
 		}
 	}, []);
 
@@ -305,6 +320,7 @@ function Chat() {
 	//사이드바 오픈 확인용
 
 	//사이드바 열림 상태 변경
+
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
 	};
@@ -312,7 +328,7 @@ function Chat() {
 	//리뷰 더 불러오기
 	const loadMoreReviews = async () => {
 		const res = await axios.post("/review/crawling/more", {
-			id: id,
+			id: reviewId,
 			times: times + 1,
 		});
 
