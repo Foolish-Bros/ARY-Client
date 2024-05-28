@@ -100,6 +100,13 @@ function Chat() {
 	// 결과 관련
 	let resultId = "";
 
+	useEffect(() => {
+		if (!cookies.token) {
+			alert("로그인 후 이용하세요");
+			window.location.replace("/login");
+		}
+	}, []);
+
 	// MainView를 통해 들어온 경우
 	useEffect(async () => {
 		async function loadReviews(id) {

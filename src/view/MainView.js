@@ -35,6 +35,12 @@ function MainView() {
 	];
 
 	useEffect(() => {
+		if (!cookies.token) {
+			window.location.replace("/login");
+		}
+	}, []);
+
+	useEffect(() => {
 		const token = cookies[0].token;
 		axios
 			.get("/member/info", {
