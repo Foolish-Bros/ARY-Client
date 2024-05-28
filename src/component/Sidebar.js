@@ -24,7 +24,7 @@ const Sidebar = () => {
 	const [selectedItem, setSelectedItem] = useState(null);
 	const [hoveredItem, setHoveredItem] = useState(null);
 	const [chatItems, setChatItems] = useState([]);
-	const [firstQuestionItems, setFirstQuestionItems] = useState([]);
+	const [lastQuestionItems, setlastQuestionItems] = useState([]);
 	const [itemData, setItemData] = useState([]); // id와 reviewId를 저장할 상태
 
 	//쿠키
@@ -41,13 +41,16 @@ const Sidebar = () => {
 			.then((res) => {
 				if (res.data.success) {
 					const chatItems = res.data.data.map(item => item.title || '');
-					const firstQuestionItems = res.data.data.map(item => item.questionList[0]?.question || '');
+					const lastQuestionItems = res.data.data.map(item => {
+                        const questions = item.questionList;
+                        return questions.length > 0 ? questions[questions.length - 1].question : '';
+                    });
 					const itemData = res.data.data.map(item => ({
 						id: item.id,
 						reviewId: item.reviewId
 					}));
 					setChatItems(chatItems);
-					setFirstQuestionItems(firstQuestionItems);
+					setlastQuestionItems(lastQuestionItems);
 					setItemData(itemData); // id와 reviewId를 저장
 
 					// username 저장
@@ -65,12 +68,14 @@ const Sidebar = () => {
 
 	}, [cookies.token]);
 
-	const clickHandler = (text) => {
+	const clickHandler = (index, text) => {
 		if (text === "") {
 			window.location.href = "/";
 		} else {
-			setSelectedItem(text);
-			window.location.href = "/result";
+			const resultId = itemData[index].id;
+			if(resultId){
+				window.location.href = `/result?id=${resultId}`;
+			}
 		}
 	};
 
@@ -83,7 +88,7 @@ const Sidebar = () => {
 				.then((res) => {
 					if (res.data.success) {
 						setChatItems((prevItems) => prevItems.filter((_, i) => i !== index));
-						setFirstQuestionItems((prevItems) => prevItems.filter((_, i) => i !== index));
+						setlastQuestionItems((prevItems) => prevItems.filter((_, i) => i !== index));
 						setItemData((prevItems) => prevItems.filter((_, i) => i !== index)); // 삭제 시 itemData도 업데이트
 					} else {
 						alert("삭제에 실패하였습니다.");
@@ -104,7 +109,7 @@ const Sidebar = () => {
 			>
 				<ListItem
 					button
-					onClick={() => clickHandler(text)}
+					onClick={() => clickHandler(index, text)}
 					selected={selectedItem === text}
 					className={styles.listItem}
 					sx={{
@@ -152,8 +157,8 @@ const Sidebar = () => {
 							</Box>
 						}
 						secondary={
-							firstQuestionItems[index] &&
-								firstQuestionItems[index].length > 20 ? (
+							lastQuestionItems[index] &&
+								lastQuestionItems[index].length > 20 ? (
 								<Box
 									component="span"
 									sx={{
@@ -164,7 +169,7 @@ const Sidebar = () => {
 										textOverflow: "ellipsis",
 									}}
 								>
-									{firstQuestionItems[index].slice(0, 20) + "..."}
+									{lastQuestionItems[index].slice(0, 20) + "..."}
 								</Box>
 							) : (
 								<Box
@@ -177,7 +182,7 @@ const Sidebar = () => {
 										textOverflow: "ellipsis",
 									}}
 								>
-									{firstQuestionItems[index]}
+									{lastQuestionItems[index]}
 								</Box>
 							)
 						}
