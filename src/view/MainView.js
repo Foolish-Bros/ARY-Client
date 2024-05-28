@@ -35,6 +35,12 @@ function MainView() {
 	];
 
 	useEffect(() => {
+		if (!cookies.token) {
+			window.location.replace("/login");
+		}
+	}, []);
+
+	useEffect(() => {
 		const token = cookies[0].token;
 		axios
 			.get("/member/info", {
@@ -59,7 +65,6 @@ function MainView() {
 		axios.get("/result/recent").then((res) => {
 			if (res.data.success) {
 				setRecentReviews(res.data.data);
-				console.log(res);
 			}
 		});
 	}, []);

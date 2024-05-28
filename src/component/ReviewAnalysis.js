@@ -2,12 +2,15 @@ import React from "react";
 import { Box, Typography, Rating, LinearProgress } from "@mui/material";
 
 // 제목 컴포넌트
-const ReviewAnalysisTitle = ({ title }) => (
+const ReviewAnalysisTitle = ({ title, url }) => (
 	<Typography
 		variant="h5"
 		gutterBottom
 		textAlign="center"
-		sx={{ fontWeight: "bold" }}
+		sx={{ fontWeight: "bold", cursor: "pointer" }}
+		onClick={() => {
+			window.open(url);
+		}}
 	>
 		{title}
 	</Typography>
@@ -78,15 +81,15 @@ const SentimentRatio = ({ positivePercentage, negativePercentage }) => (
 );
 
 // 메인 컴포넌트
-const ReviewAnalysis = ({ title, totalRate }) => {
-	console.log(title);
-	console.log(totalRate);
+const ReviewAnalysis = ({ title, totalRate, url }) => {
+	console.log(url);
+
 	const positivePercentage = 30;
 	const negativePercentage = 70;
 
 	return (
 		<Box sx={{ padding: 2 }}>
-			<ReviewAnalysisTitle title={title} />
+			<ReviewAnalysisTitle title={title} url={url} />
 			<AverageRating rating={totalRate} />
 			<SentimentRatio
 				positivePercentage={positivePercentage}
