@@ -46,7 +46,6 @@ const LoginPage = () => {
 					console.log(res.data.data);
 					setCookie("token", res.data.data, {
 						path: "/",
-						secure: "/",
 						domain: "all-review-young.site",
 						sameSite: "strict",
 						expires: new Date(Date.now() + 3600000),

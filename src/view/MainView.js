@@ -81,7 +81,6 @@ function MainView() {
 		if (sites && url) {
 			setCookieCrawl("crawl", "yes", {
 				path: "/",
-				secure: "/",
 				domain: "all-review-young.site",
 				sameSite: "strict",
 				expires: new Date(Date.now() + 3600000),
