@@ -209,13 +209,13 @@ function Chat() {
 							resultId = res.data.data.id;
 							setCookies("reviewId", reviewId, {
 								path: "/result",
-								domain: "all-review-young.site",
+								domain: "localhost",
 								sameSite: "strict",
 								expires: new Date(Date.now() + 3600000),
 							});
 							setCookies("resultId", resultId, {
 								path: "/result",
-								domain: "all-review-young.site",
+								domain: "localhost",
 								sameSite: "strict",
 								expires: new Date(Date.now() + 3600000),
 							});
@@ -229,7 +229,7 @@ function Chat() {
 							]);
 							removeCookies("crawl", {
 								path: "/",
-								domain: "all-review-young.site",
+								domain: "localhost",
 							});
 							reviewId = res.data.data.reviewId;
 							setResultEmail(res.data.data.member.email);
@@ -244,11 +244,11 @@ function Chat() {
 		if (idParams.get("id")) {
 			removeCookies("resultId", {
 				path: "/result",
-				domain: "all-review-young.site",
+				domain: "localhost",
 			});
 			removeCookies("reviewId", {
 				path: "/result",
-				domain: "all-review-young.site",
+				domain: "localhost",
 			});
 			resultId = idParams.get("id");
 			await loadResult(resultId);

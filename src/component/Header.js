@@ -19,6 +19,9 @@ function Header() {
 						width: "230px",
 						height: "auto",
 					}}
+					onClick={() => {
+						window.location.href = "/";
+					}}
 				/>
 				<div
 					style={{
@@ -31,6 +34,7 @@ function Header() {
 				>
 					<Tooltip title="도움말" placement="bottom">
 						<QuestionMarkIcon
+							sx={{ cursor: "pointer" }}
 							onClick={() => {
 								// TODO: 링크 수정
 								window.open(
@@ -41,6 +45,7 @@ function Header() {
 					</Tooltip>
 					<Tooltip title="문의하기" placement="bottom">
 						<QuestionAnswerIcon
+							sx={{ cursor: "pointer" }}
 							onClick={() => {
 								window.open(
 									"/question",

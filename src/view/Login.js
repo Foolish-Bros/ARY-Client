@@ -15,7 +15,7 @@ import { useCookies } from "react-cookie";
 const LoginPage = () => {
 	const navigate = useNavigate();
 
-	const [cookies, setCookie] = useCookies(["token"]);
+	const [, setCookie] = useCookies(["token"]);
 
 	// const classes = useStyles();
 	const [username, setUsername] = useState("");
@@ -52,7 +52,7 @@ const LoginPage = () => {
 					console.log(res.data.data);
 					setCookie("token", res.data.data, {
 						path: "/",
-						domain: "all-review-young.site",
+						domain: "localhost",
 						sameSite: "strict",
 						expires: new Date(Date.now() + 3600000),
 					});
@@ -166,7 +166,7 @@ const LoginPage = () => {
 									color: "#999",
 								}}
 							>
-								<span style={{ background: "#fff", padding: "0 10px",  }}>
+								<span style={{ background: "#fff", padding: "0 10px" }}>
 									또는
 								</span>
 							</div>
