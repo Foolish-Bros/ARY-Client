@@ -52,3 +52,29 @@
     margin: auto; /* Center on larger screens */
   }
 }
+
+.footerText {
+  text-align: center;
+  color: gray;
+  margin-top: 20px;
+  font-size: 12px;
+  white-space: nowrap; /* Ensure text is on a single line */
+}
+
+@media (max-width: 600px) {
+  .footerText {
+    display: none; /* Hide text on small screens if it overlaps */
+  }
+}
+
+@media (min-width: 600px) {
+  .footerText {
+    display: block; /* Ensure text is displayed on larger screens */
+  }
+}
+
+@media (max-width: 960px) {
+  .footerText {
+    display: none; /* Hide text on medium screens if it overlaps */
+  }
+}

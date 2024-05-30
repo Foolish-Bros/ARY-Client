@@ -29,6 +29,12 @@ const LoginPage = () => {
 		setPassword(event.target.value);
 	};
 
+	const handleKeyPress = (event) => {
+		if (event.key === "Enter") {
+			handleLogin(event);
+		}
+	};
+
 	const handleLogin = (e) => {
 		e.preventDefault();
 
@@ -111,6 +117,7 @@ const LoginPage = () => {
 								autoComplete="current-password"
 								value={password}
 								onChange={handlePasswordChange}
+								onKeyPress={handleKeyPress}
 								InputLabelProps={{
 									style: { color: "green" }, // 활성화됐을 때 강조되는 색상을 여기에서 지정합니다.
 								}}
@@ -139,6 +146,7 @@ const LoginPage = () => {
 									variant="contained"
 									style={{
 										backgroundColor: "#E3E3E3",
+										color: "#333",
 										boxShadow: "none",
 									}}
 									onClick={handleSignUp}
@@ -151,14 +159,14 @@ const LoginPage = () => {
 								style={{
 									width: "80%",
 									textAlign: "center",
-									borderBottom: "1px solid #E3E3E3",
+									borderBottom: "1px solid #999",
 									lineHeight: "0.1em",
 									margin: "0 auto",
 									marginTop: "40px",
-									color: "#E3E3E3",
+									color: "#999",
 								}}
 							>
-								<span style={{ background: "#fff", padding: "0 10px" }}>
+								<span style={{ background: "#fff", padding: "0 10px",  }}>
 									또는
 								</span>
 							</div>
@@ -187,6 +195,9 @@ const LoginPage = () => {
 										style={{ width: "auto", height: "auto" }}
 									/>
 								</Button>
+							</div>
+							<div className={styles.footerText}>
+								명지대학교 캡스톤디자인 - 우매한 형제들
 							</div>
 						</div>
 					</div>
