@@ -3,12 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
 	Box,
 	IconButton,
-	Modal,
 	Typography,
-	Tabs,
-	Tab,
-	TextField,
-	Button,
 	List,
 	ListItem,
 	ListItemAvatar,
@@ -30,7 +25,7 @@ const Profile = ({ username }) => {
 	const [tabValue, setTabValue] = useState(0);
 
 	const navigate = useNavigate();
-	const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+	const [, , removeCookie] = useCookies(["token"]);
 
 	//모달 오픈 상태 처리
 	const handleModalOpen = () => {
@@ -74,6 +69,7 @@ const Profile = ({ username }) => {
 						</Avatar>
 					</ListItemAvatar>
 					<ListItemText
+						sx={{ cursor: "default" }}
 						primary={
 							<Typography variant="body1" sx={{ fontWeight: "bold" }}>
 								{username}

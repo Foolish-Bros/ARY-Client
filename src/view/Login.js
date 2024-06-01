@@ -15,7 +15,7 @@ import { useCookies } from "react-cookie";
 const LoginPage = () => {
 	const navigate = useNavigate();
 
-	const [cookies, setCookie] = useCookies(["token"]);
+	const [, setCookie] = useCookies(["token"]);
 
 	// const classes = useStyles();
 	const [username, setUsername] = useState("");
@@ -117,7 +117,7 @@ const LoginPage = () => {
 								autoComplete="current-password"
 								value={password}
 								onChange={handlePasswordChange}
-								onKeyPress={handleKeyPress}
+								onKeyDown={handleKeyPress}
 								InputLabelProps={{
 									style: { color: "green" }, // 활성화됐을 때 강조되는 색상을 여기에서 지정합니다.
 								}}
@@ -166,7 +166,7 @@ const LoginPage = () => {
 									color: "#999",
 								}}
 							>
-								<span style={{ background: "#fff", padding: "0 10px",  }}>
+								<span style={{ background: "#fff", padding: "0 10px" }}>
 									또는
 								</span>
 							</div>

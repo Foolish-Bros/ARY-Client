@@ -19,6 +19,9 @@ function Header() {
 						width: "230px",
 						height: "auto",
 					}}
+					onClick={() => {
+						window.location.href = "/";
+					}}
 				/>
 				<div
 					style={{
@@ -31,16 +34,18 @@ function Header() {
 				>
 					<Tooltip title="도움말" placement="bottom">
 						<QuestionMarkIcon
+							sx={{ cursor: "pointer" }}
 							onClick={() => {
 								// TODO: 링크 수정
 								window.open(
-									"https://lttworld.notion.site/API-Document-188487d905d24695a7c151ca89003446?pvs=74"
+									"https://lttworld.notion.site/ARY-All-Review-Young-411a31ac8634421493ec2501e99a0368?pvs=4"
 								);
 							}}
 						/>
 					</Tooltip>
 					<Tooltip title="문의하기" placement="bottom">
 						<QuestionAnswerIcon
+							sx={{ cursor: "pointer" }}
 							onClick={() => {
 								window.open(
 									"/question",

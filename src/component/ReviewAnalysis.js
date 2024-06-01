@@ -81,11 +81,11 @@ const SentimentRatio = ({ positivePercentage, negativePercentage }) => (
 );
 
 // 메인 컴포넌트
-const ReviewAnalysis = ({ title, totalRate, url }) => {
+const ReviewAnalysis = ({ title, totalRate, url, positive, negative }) => {
 	console.log(url);
 
-	const positivePercentage = 30;
-	const negativePercentage = 70;
+	const positivePercentage = positive;
+	const negativePercentage = negative;
 
 	return (
 		<Box sx={{ padding: 2 }}>
