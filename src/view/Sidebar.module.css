@@ -1,34 +1,38 @@
 .drawerList {
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
 }
 
 .listItemButton {
-  background-color: #007f73 !important;
+	background-color: #007f73 !important;
 }
 
 .listItemButton:hover {
-  background-color: #7b7a78;
+	background-color: #7b7a78;
 }
 
 .listItemTextCenter {
-  text-align: center;
-  color: white;
-  margin: 0 1px 0;
+	text-align: center;
+	color: white;
+	margin: 0 1px 0;
 }
 
 .profile {
-  margin-top: auto;
-  background-color: #e3e3e3;
+	margin-top: auto;
+	background-color: #e3e3e3;
 }
 
 .divider {
-  background-color: #e3e3e3 !important;
-  height: 0.1px !important;
-  margin: 8px 0 !important;
+	background-color: #e3e3e3 !important;
+	height: 0.1px !important;
+	margin: 8px 0 !important;
 }
 
 .deleteButton {
-  margin-left: auto; /* Pushes the button to the far right */
+	margin-left: auto; /* Pushes the button to the far right */
+}
+
+.recommandBox:hover {
+	background-color: #f5f5f5;
 }

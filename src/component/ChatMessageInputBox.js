@@ -10,7 +10,7 @@ function ChatMessageInputBox({ inputValue, setInputValue, addMessage }) {
 				placeholder="메시지를 입력하세요"
 				value={inputValue}
 				onChange={(e) => setInputValue(e.target.value)}
-				onKeyPress={(e) => {
+				onKeyDown={(e) => {
 					if (e.key === "Enter") {
 						addMessage();
 					}

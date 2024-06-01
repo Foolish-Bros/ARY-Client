@@ -18,10 +18,9 @@ import coupangLogo from "../resource/coupang_logo_img.svg";
 import elevenstLogo from "../resource/11st_logo_img.svg";
 import auctionLogo from "../resource/auction_logo_img.svg";
 
-
 function MainView() {
 	const cookies = useCookies(["token"]);
-	const [cookieCrawl, setCookieCrawl] = useCookies(["crawl"]);
+	const [, setCookieCrawl] = useCookies(["crawl"]);
 	const navigate = useNavigate(); // Initialize useNavigate
 
 	const [username, setUsername] = useState("");
@@ -134,10 +133,14 @@ function MainView() {
 								onChange={handleSiteChange}
 								label="지원 사이트"
 								renderValue={(selected) => {
-									const site = sites.find(s => s.value === selected);
+									const site = sites.find((s) => s.value === selected);
 									return (
-										<div style={{ display: 'flex', alignItems: 'center' }}>
-											<img src={site.logo} alt={site.label} style={{ marginRight: 16, width: 30, height: 30 }} />
+										<div style={{ display: "flex", alignItems: "center" }}>
+											<img
+												src={site.logo}
+												alt={site.label}
+												style={{ marginRight: 16, width: 30, height: 30 }}
+											/>
 											{site.label}
 										</div>
 									);
@@ -145,7 +148,11 @@ function MainView() {
 							>
 								{sites.map((site) => (
 									<MenuItem key={site.value} value={site.value}>
-										<img src={site.logo} alt={site.label} style={{ marginRight: 16, width: 30, height: 30 }} />
+										<img
+											src={site.logo}
+											alt={site.label}
+											style={{ marginRight: 16, width: 30, height: 30 }}
+										/>
 										{site.label}
 									</MenuItem>
 								))}

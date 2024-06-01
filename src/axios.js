@@ -2,7 +2,7 @@ import axios from "axios";
 
 const client = axios.create({
 	baseURL: "https://backend.all-review-young.site",
-	timeout: 15000,
+	timeout: 25000,
 	headers: {
 		"Cache-Control": "no-cache",
 		"Content-Type": "application/json",
