@@ -8,6 +8,7 @@ import { keyframes, styled } from "@mui/material";
 import ReviewAnalysis from "../component/ReviewAnalysis";
 import ReviewItem from "../component/ReviewItem";
 import ReadMoreReview from "./ReadMoreReviewBtn";
+import styles from "../view/Sidebar.module.css";
 
 //채팅 메시지 컴포넌트 임포트
 import ChatMessage from "./ChatMessage";
@@ -15,6 +16,7 @@ import ChatMessage from "./ChatMessage";
 import ChatMessageInputBox from "./ChatMessageInputBox";
 
 import axios from "../axios";
+import aiAxios from "../aiAxios";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -100,6 +102,25 @@ function Chat() {
 	// 결과 관련
 	let resultId = "";
 
+	// AI 연결 관련
+	// 추천 질문
+	const [recommand, setRecommand] = useState([""]);
+	// 긍부정
+	const [positive, setPositive] = useState(0);
+	const [negative, setNegative] = useState(0);
+
+	// 임시 더미데이터
+	// TODO: 삭제하고 API 호출로 변경
+	useEffect(() => {
+		setPositive(90);
+		setNegative(10);
+		setRecommand([
+			"1. 이 옷은 아이가 편하게 입을 수 있나요?",
+			"2. 세탁 후에도 옷의 품질이 잘 유지되나요?",
+			"3. 이 옷의 사이즈는 정사이즈로 나오는 편인가요?",
+		]);
+	}, []);
+
 	useEffect(() => {
 		if (!cookies.token) {
 			alert("로그인 후 이용하세요");
@@ -127,6 +148,7 @@ function Chat() {
 				setTotalRate(res.data.data.totalRate);
 				setReviews(res.data.data.reviews);
 				setThumbnail(res.data.data.thumbnail);
+				await recommendLoad(res.data.data.reviews);
 			}
 		}
 
@@ -140,7 +162,6 @@ function Chat() {
 				});
 
 			if (res.data.success) {
-				// TODO: message logic 채워넣어야됌 --> 그래야 메세지 이슈 사라짐
 				const questionList = res.data.data.questionList;
 				if (questionList !== null) {
 					questionList.map((msg, idx) => {
@@ -209,13 +230,13 @@ function Chat() {
 							resultId = res.data.data.id;
 							setCookies("reviewId", reviewId, {
 								path: "/result",
-								domain: "localhost",
+								domain: "all-review-young.site",
 								sameSite: "strict",
 								expires: new Date(Date.now() + 3600000),
 							});
 							setCookies("resultId", resultId, {
 								path: "/result",
-								domain: "localhost",
+								domain: "all-review-young.site",
 								sameSite: "strict",
 								expires: new Date(Date.now() + 3600000),
 							});
@@ -229,7 +250,7 @@ function Chat() {
 							]);
 							removeCookies("crawl", {
 								path: "/",
-								domain: "localhost",
+								domain: "all-review-young.site",
 							});
 							reviewId = res.data.data.reviewId;
 							setResultEmail(res.data.data.member.email);
@@ -241,14 +262,24 @@ function Chat() {
 					});
 			}
 		}
+		async function recommendLoad(reviews) {
+			aiAxios
+				.post("/ai/recomend", {
+					reviews,
+				})
+				.then((res) => {
+					console.log(res);
+				});
+		}
+
 		if (idParams.get("id")) {
 			removeCookies("resultId", {
 				path: "/result",
-				domain: "localhost",
+				domain: "all-review-young.site",
 			});
 			removeCookies("reviewId", {
 				path: "/result",
-				domain: "localhost",
+				domain: "all-review-young.site",
 			});
 			resultId = idParams.get("id");
 			await loadResult(resultId);
@@ -309,7 +340,7 @@ function Chat() {
 			.catch((err) => {
 				console.log(err);
 			});
-	});
+	}, []);
 
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
@@ -368,6 +399,8 @@ function Chat() {
 
 			setMessages([...messages, newMessage]);
 			setInputValue("");
+
+			handleSubmitChat();
 		}
 	};
 
@@ -391,6 +424,20 @@ function Chat() {
 			}, 80); // setTimeout으로 다음 이벤트 루프까지 기다림
 		}
 	}, [messages, isLoaded]);
+
+	const handleSubmitChat = () => {
+		aiAxios
+			.post(
+				"/ai/chat",
+				{
+					reviews,
+				},
+				{ params: { query: "질문 들어갈 자리" } }
+			)
+			.then((res) => {
+				console.log(res);
+			});
+	};
 
 	return (
 		<Box sx={{ display: "flex" }}>
@@ -428,6 +475,28 @@ function Chat() {
 						</AnimatedMessage>
 					))}
 				</Box>
+
+				{!idParams.get("id") &&
+					recommand.map((recommand, idx) => (
+						// 랜더링 조건 : query string이 없다 or messages === null이다
+						<div
+							style={{
+								alignSelf: "flex-end",
+								border: "1px solid #00695c",
+								borderRadius: "20px",
+								marginTop: "2px",
+								padding: "0px 10px",
+								color: "#00695c",
+								cursor: "pointer",
+							}}
+							className={styles.recommandBox}
+							onClick={() => {
+								//TODO:질문하는 로직 추가해야됨
+							}}
+						>
+							{recommand}
+						</div>
+					))}
 				{/* 채팅 메시지 입력 박스 */}
 				{currentEmail === resultEmail && (
 					<ChatMessageInputBox
@@ -480,6 +549,8 @@ function Chat() {
 							title={title}
 							totalRate={Number(totalRate)}
 							url={baseUrl}
+							positive={positive}
+							negative={negative}
 						/>
 						{/* 썸네일 이미지 추가 */}
 						<Box sx={{ textAlign: "center", mt: 5 }}>

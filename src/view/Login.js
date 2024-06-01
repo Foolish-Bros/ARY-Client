@@ -52,7 +52,7 @@ const LoginPage = () => {
 					console.log(res.data.data);
 					setCookie("token", res.data.data, {
 						path: "/",
-						domain: "localhost",
+						domain: "all-review-young.site",
 						sameSite: "strict",
 						expires: new Date(Date.now() + 3600000),
 					});
@@ -117,7 +117,7 @@ const LoginPage = () => {
 								autoComplete="current-password"
 								value={password}
 								onChange={handlePasswordChange}
-								onKeyPress={handleKeyPress}
+								onKeyDown={handleKeyPress}
 								InputLabelProps={{
 									style: { color: "green" }, // 활성화됐을 때 강조되는 색상을 여기에서 지정합니다.
 								}}
