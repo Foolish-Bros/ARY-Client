@@ -42,6 +42,15 @@ const ChatMessage = ({ message, animate }) => {
 		}
 	}, [animate, index, message.sender, message.text]);
 
+	const replaceNewlinesWithBreaks = (text) => {
+		return text.split("\\n").map((str, index) => (
+			<React.Fragment key={index}>
+				{str}
+				<br />
+			</React.Fragment>
+		));
+	};
+
 	return (
 		<Box sx={messageStyle(message.sender)}>
 			<Typography
@@ -54,7 +63,8 @@ const ChatMessage = ({ message, animate }) => {
 				variant="body2"
 				style={{ fontWeight: "bold", whiteSpace: "pre-line" }}
 			>
-				{displayText}
+				{replaceNewlinesWithBreaks(displayText)}
+				{/* {displayText} */}
 			</Typography>
 		</Box>
 	);
