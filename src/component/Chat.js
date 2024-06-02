@@ -109,17 +109,7 @@ function Chat() {
 	const [positive, setPositive] = useState(0);
 	const [negative, setNegative] = useState(0);
 
-	// 임시 더미데이터
-	// TODO: 삭제하고 API 호출로 변경
-	useEffect(() => {
-		setPositive(90);
-		setNegative(10);
-		setRecommand([
-			"1. 이 옷은 아이가 편하게 입을 수 있나요?",
-			"2. 세탁 후에도 옷의 품질이 잘 유지되나요?",
-			"3. 이 옷의 사이즈는 정사이즈로 나오는 편인가요?",
-		]);
-	}, []);
+	const [forUpdate, setForUpdate] = useState("");
 
 	useEffect(() => {
 		if (!cookies.token) {
@@ -149,6 +139,7 @@ function Chat() {
 				setReviews(res.data.data.reviews);
 				setThumbnail(res.data.data.thumbnail);
 				await recommendLoad(res.data.data.reviews);
+				await positive(res.data.data.reviews);
 			}
 		}
 
@@ -177,7 +168,7 @@ function Chat() {
 							...messages,
 							{
 								animate: true,
-								sender: "bot",
+								sender: "ARY",
 								text: msg.answer,
 							},
 						]);
@@ -244,7 +235,7 @@ function Chat() {
 								...messages,
 								{
 									animate: true,
-									sender: "bot",
+									sender: "ARY",
 									text: "리뷰를 불러왔습니다!",
 								},
 							]);
@@ -262,13 +253,31 @@ function Chat() {
 					});
 			}
 		}
+
+		async function positive(reviews) {
+			aiAxios
+				.post("/ai/pn", { reviews })
+				.then((res) => {
+					const sentence = res.data.split(",");
+					const positive = sentence[0].replace(/^"|"$/g, "");
+					const negative = sentence[1].replace(/^"|"$/g, "");
+					setPositive(positive);
+					setNegative(negative);
+				})
+				.catch((err) => console.log(err));
+		}
+
 		async function recommendLoad(reviews) {
 			aiAxios
-				.post("/ai/recomend", {
+				.post("/ai/recommend", {
 					reviews,
 				})
 				.then((res) => {
-					console.log(res);
+					const sentence = res.data.split("\\n");
+					const recommend1 = sentence[0].replace(/^"|"$/g, "");
+					const recommend2 = sentence[1];
+					const recommend3 = sentence[2].replace(/^"|"$/g, "");
+					setRecommand([recommend1, recommend2, recommend3]);
 				});
 		}
 
@@ -285,13 +294,14 @@ function Chat() {
 			await loadResult(resultId);
 			await loadReviews(reviewId);
 			setMoreText("리뷰 새로고침");
+			setForUpdate(resultId);
 		} else {
 			if (cookies.crawl === "yes") {
 				const initialMessages = [
 					// 애니메이션 적용: false
 					{
 						animate: true,
-						sender: "bot",
+						sender: "ARY",
 						text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
 					},
 				];
@@ -303,7 +313,7 @@ function Chat() {
 					// 애니메이션 적용: false
 					{
 						animate: true,
-						sender: "bot",
+						sender: "ARY",
 						text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
 					},
 				];
@@ -312,12 +322,13 @@ function Chat() {
 					...messages,
 					{
 						animate: true,
-						sender: "bot",
+						sender: "ARY",
 						text: "리뷰를 불러왔습니다!",
 					},
 				]);
 				await loadReviews(cookies.reviewId);
 				await loadResult(cookies.resultId);
+				setForUpdate(cookies.resultId);
 			}
 		}
 	}, []);
@@ -352,7 +363,7 @@ function Chat() {
 			...messages,
 			{
 				animate: true,
-				sender: "bot",
+				sender: "ARY",
 				text: "리뷰를 받아오는 중입니다... 잠시만 기다려주세요",
 			},
 		]);
@@ -373,7 +384,7 @@ function Chat() {
 				...messages,
 				{
 					animate: true,
-					sender: "bot",
+					sender: "ARY",
 					text: "리뷰를 불러왔습니다!",
 				},
 			]);
@@ -400,7 +411,16 @@ function Chat() {
 			setMessages([...messages, newMessage]);
 			setInputValue("");
 
-			handleSubmitChat();
+			setMessages((messages) => [
+				...messages,
+				{
+					animate: true,
+					sender: "ARY",
+					text: "...",
+				},
+			]);
+
+			handleSubmitChat(inputValue);
 		}
 	};
 
@@ -425,18 +445,45 @@ function Chat() {
 		}
 	}, [messages, isLoaded]);
 
-	const handleSubmitChat = () => {
+	const handleSubmitChat = (question) => {
 		aiAxios
 			.post(
 				"/ai/chat",
 				{
 					reviews,
 				},
-				{ params: { query: "질문 들어갈 자리" } }
+				{ params: { query: question } }
 			)
 			.then((res) => {
-				console.log(res);
-			});
+				setMessages((prevMessages) => {
+					// 이전 상태 배열을 복사
+					const newMessage = [...prevMessages];
+					// 배열의 맨 끝 요소를 제거
+					newMessage.pop();
+					return newMessage;
+				});
+
+				setMessages((messages) => [
+					...messages,
+					{
+						animate: true,
+						sender: "ARY",
+						text: res.data.replace(/^"|"$/g, ""),
+					},
+				]);
+				console.log(res.data);
+				axios
+					.post("/result/update", {
+						resultId: forUpdate,
+						question: question,
+						answer: res.data.replace(/^"|"$/g, ""),
+					})
+					.then((res) => {})
+					.catch((err) => {
+						console.log(err);
+					});
+			})
+			.catch((err) => console.log(err));
 	};
 
 	return (
@@ -491,7 +538,17 @@ function Chat() {
 							}}
 							className={styles.recommandBox}
 							onClick={() => {
-								//TODO:질문하는 로직 추가해야됨
+								const newMessage = {
+									id: messages.length + 1,
+									sender: "user",
+									text: recommand,
+									animate: true,
+								};
+
+								setMessages([...messages, newMessage]);
+								setInputValue("");
+
+								handleSubmitChat(recommand);
 							}}
 						>
 							{recommand}
