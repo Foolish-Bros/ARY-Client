@@ -546,6 +546,14 @@ function Chat() {
 								};
 
 								setMessages([...messages, newMessage]);
+								setMessages((messages) => [
+									...messages,
+									{
+										animate: true,
+										sender: "ARY",
+										text: "...",
+									},
+								]);
 								setInputValue("");
 
 								handleSubmitChat(recommand);

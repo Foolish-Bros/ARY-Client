@@ -7,7 +7,7 @@ const aiAxios = axios.create({
 		// "Cache-Control": "no-cache",
 		Accept: "application/json",
 		"Content-Type": "application/json",
-		"Access-Control-Allow-Origin": "http://localhost:3000",
+		"Access-Control-Allow-Origin": "https://www.all-review-young.site",
 		"ngrok-skip-browser-warning": "25040",
 	},
 	withCredentials: false,
